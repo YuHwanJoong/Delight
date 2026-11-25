@@ -1,0 +1,3515 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Delight POP</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #dce8f5;
+  font-family: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  height: 100vh;
+  height: 100dvh;
+  margin: auto;
+  overflow: hidden;
+  background: #83acd9 url("images/background.jpg") center / cover no-repeat;
+}
+
+/* 상단 */
+
+.header {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  height: 64px;
+  padding: 0 12px;
+  color: white;
+  background: rgba(60, 100, 155, .10);
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-days {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.header-actions {
+  display: flex;
+  margin-left: auto;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 42px;
+  padding: 6px;
+  border: 0;
+  background: transparent;
+  color: white;
+}
+
+.icon-btn svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 채팅 */
+
+.chat {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 18px 15px calc(40px + env(safe-area-inset-bottom));
+  scrollbar-width: thin;
+}
+
+.notice {
+  margin: 7px 0 34px;
+  padding: 15px 17px;
+  border-radius: 16px;
+  background: rgba(44, 74, 113, .39);
+  color: white;
+  font-size: 14px;
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.notice strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.day-label {
+  display: table;
+  max-width: 100%;
+  margin: 18px auto 38px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  background: rgba(66, 97, 132, .45);
+  color: white;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* 프로필 */
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.profile {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  margin: 1px 0 8px;
+  white-space: nowrap;
+}
+
+.sender {
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  margin-left: 2px;
+}
+
+.badge svg {
+  width: 19px;
+  height: 19px;
+}
+
+.time {
+  margin-left: 7px;
+  color: rgba(255, 255, 255, .94);
+  font-size: 12px;
+}
+
+/* 일반 말풍선 */
+
+.bubble {
+  display: table;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 8px;
+  padding: 12px 16px;
+  border-radius: 23px;
+  background: #fff;
+  color: #171717;
+  font-family: Pretendard, "Apple SD Gothic Neo", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.52;
+  letter-spacing: -.25px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.original {
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 원문 아래 번역 */
+
+.translation {
+  display: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #dce1e8;
+  color: #8798b0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.translation.show {
+  display: block;
+}
+
+/* 답장 말풍선 */
+
+.reply {
+  display: table;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 8px;
+  padding: 12px 15px;
+  border: 0;
+  border-radius: 27px;
+  background: #fff;
+  color: #171717;
+  font-family: Pretendard, "Apple SD Gothic Neo", sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.reply-heading {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #343434;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.reply-quote {
+  margin-top: 4px;
+  color: #a0a0a0;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.reply-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.reply-arrow {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.reply-arrow svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.reply-answer-content {
+  min-width: 0;
+}
+
+.reply-answer {
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -.25px;
+  white-space: pre-wrap;
+}
+
+.reply .translation {
+  margin-top: 6px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* 사진 */
+
+.message-photo {
+  display: block;
+  width: auto;
+  max-width: min(100%, 320px);
+  max-height: 450px;
+  margin: 0 0 8px;
+  border-radius: 17px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+/* 언어 메뉴 */
+
+.lang-menu,
+.calendar {
+  display: none;
+  position: absolute;
+  z-index: 30;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 27px rgba(0, 0, 0, .2);
+}
+
+.lang-menu.open,
+.calendar.open {
+  display: block;
+}
+
+.lang-menu {
+  top: 61px;
+  right: 45px;
+  width: 180px;
+  padding: 5px 0;
+}
+
+.lang-menu button {
+  display: block;
+  width: 100%;
+  padding: 13px 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+}
+
+.lang-menu button.active {
+  color: #587fe0;
+  font-weight: 600;
+}
+
+/* 달력 */
+
+.calendar {
+  top: 68px;
+  right: 9px;
+  width: min(330px, calc(100% - 18px));
+  padding: 16px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-head button {
+  border: 0;
+  background: transparent;
+  font-size: 23px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px 0;
+  text-align: center;
+}
+
+.weekday {
+  padding: 8px 0;
+  color: #9fa6b5;
+  font-size: 12px;
+}
+
+.day {
+  position: relative;
+  width: 36px;
+  height: 38px;
+  max-width: 100%;
+  margin: auto;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #9da4b1;
+}
+
+.day.has {
+  background: #dfe8f8;
+  color: #222;
+  font-weight: 600;
+}
+
+.day.has::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #af9569;
+}
+
+.primary {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border: 0;
+  border-radius: 11px;
+  background: #292929;
+  color: white;
+}
+
+/* 설정창 */
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, .47);
+}
+
+.overlay.open {
+  display: block;
+}
+
+.sheet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 560px;
+  max-height: 89dvh;
+  overflow-y: auto;
+  padding: 12px 18px calc(30px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+  color: #222;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 20px;
+  border-radius: 10px;
+  background: #e8e2d8;
+}
+
+.sheet-title {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close {
+  position: absolute;
+  right: 17px;
+  top: 13px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #f2f2f2;
+  font-size: 23px;
+}
+
+.media-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #888;
+  font-size: 13px;
+}
+
+.media-head button {
+  border: 0;
+  background: transparent;
+  color: #57866c;
+  font-size: 12px;
+}
+
+.preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.preview img,
+.gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.setting-row {
+  display: block;
+  width: 100%;
+  padding: 18px 0;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  background: white;
+}
+
+.field {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+}
+
+.note {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 검색 */
+
+.search-result {
+  display: block;
+  width: 100%;
+  padding: 13px 0;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  text-align: left;
+}
+
+.search-date {
+  margin-bottom: 5px;
+  color: #999;
+  font-size: 12px;
+}
+
+.search-text {
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.highlight {
+  animation: flash 2s ease-out;
+}
+
+@keyframes flash {
+  0%, 40% {
+    background: #ffe3a0;
+  }
+
+  100% {
+    background: white;
+  }
+}
+
+/* 사진 확대 */
+
+.viewer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(0, 0, 0, .92);
+}
+
+.viewer.open {
+  display: flex;
+}
+
+.viewer img {
+  max-width: 100%;
+  max-height: 80dvh;
+  object-fit: contain;
+}
+
+.viewer button {
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 20px;
+  background: white;
+}
+
+@media (max-width: 360px) {
+  .chat {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .message {
+    gap: 7px;
+  }
+
+  .profile {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .bubble,
+  .reply {
+    padding: 11px 13px;
+  }
+
+  .bubble,
+  .reply-answer {
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-back" viewBox="0 0 24 24">
+    <path d="M15 4L7 12L15 20"/>
+  </symbol>
+
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="10.8" cy="10.8" r="6.8"/>
+    <path d="m16 16 5 5"/>
+  </symbol>
+
+  <symbol id="i-calendar" viewBox="0 0 24 24">
+    <rect x="3" y="5" width="18" height="16" rx="2"/>
+    <path d="M7 2v6M17 2v6M3 10h18"/>
+  </symbol>
+
+  <symbol id="i-lang" viewBox="0 0 24 24">
+    <rect x="2" y="3" width="13" height="13" rx="2"/>
+    <path d="M5 12L9 5L13 12M6.5 9h5"/>
+    <rect x="10" y="10" width="12" height="12" rx="2"/>
+    <path d="M13 14h6M16 12v2M13 14c1 3 3 5 6 6"/>
+  </symbol>
+</svg>
+
+<div class="app">
+
+  <header class="header">
+    <button id="settingsBtn" class="icon-btn" aria-label="설정">
+      <svg><use href="#i-back"/></svg>
+    </button>
+
+    <div class="header-center">
+      <div class="header-title">Delight</div>
+      <div class="header-days" id="days"></div>
+    </div>
+
+    <div class="header-actions">
+      <button id="translateBtn" class="icon-btn" aria-label="번역">
+        <svg><use href="#i-lang"/></svg>
+      </button>
+
+      <button id="searchBtn" class="icon-btn" aria-label="검색">
+        <svg><use href="#i-search"/></svg>
+      </button>
+
+      <button id="calendarBtn" class="icon-btn" aria-label="달력">
+        <svg><use href="#i-calendar"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="langMenu" class="lang-menu">
+    <button data-lang="original" class="active">원문</button>
+    <button data-lang="en">English</button>
+    <button data-lang="ja">日本語</button>
+    <button data-lang="zh-CN">中文(简体)</button>
+    <button data-lang="zh-TW">中文(繁體)</button>
+  </div>
+
+  <div id="calendar" class="calendar">
+    <div class="calendar-head">
+      <button id="prevMonth">‹</button>
+      <strong id="calendarTitle"></strong>
+      <button id="nextMonth">›</button>
+    </div>
+
+    <div id="calendarGrid" class="calendar-grid"></div>
+
+    <button id="latestBtn" class="primary">
+      마지막 팝으로
+    </button>
+  </div>
+
+  <main id="chat" class="chat">
+    <div class="notice">
+      <strong id="welcome">방문자님 환영해요!</strong>
+      <div>
+        상대방을 불쾌하게 하는 욕설 및 비하 표현을 삼가고 배려하며 소통해 주세요.
+      </div>
+    </div>
+
+    <div id="messageList"></div>
+  </main>
+
+</div>
+
+<div id="overlay" class="overlay">
+  <div class="sheet">
+    <div class="handle"></div>
+    <button id="closeSheet" class="close">×</button>
+    <div id="sheetTitle" class="sheet-title">설정</div>
+    <div id="sheetContent"></div>
+  </div>
+</div>
+
+<div id="viewer" class="viewer">
+  <img id="viewerImage" alt="POP 사진 확대">
+  <button id="closeViewer">닫기</button>
+</div>
+
+<script>
+"use strict";
+
+/* ==========================================
+   날짜별 POP 기록
+
+   12월 17일 → 18일 → 19일
+========================================== */
+
+const recordsByDate = [
+
+  /* ========================================
+     2025년 12월 17일
+  ======================================== */
+
+  {
+    date: "2025-12-17",
+    messages: [
+
+      ["15:04", [
+        "바쁘다",
+        "나이 먹고 2026가보자"
+      ]],
+
+      ["15:23", [
+        "말은 알아서들 하고 메뉴도 알아서들 먹죠 추천대\n로 안 먹잖슴",
+        "취두부 인증해봐"
+      ]],
+
+      ["15:24", [
+        "배경 쓸 사진이"
+      ]],
+
+      ["15:25", [
+        "이거 근데 미자도 할 수 있나 어플"
+      ]],
+
+      ["15:26", [
+        "술 얘기 못하겠네",
+        "근데 나 술 안 마셨는데 이번에",
+        "런 했어"
+      ]],
+
+      ["15:27", [
+        "개피곤해서 잤어",
+        "나이 먹으니까 힘들다 이제"
+      ]],
+
+      ["15:29", [
+        "답장 기능보소",
+        "제한도 있네",
+        "잘하자 권한 많네"
+      ]],
+
+      ["15:30", [
+        "글자수가 뭔 말이여",
+        "1일 50?",
+        "아",
+        "근들갑"
+      ]],
+
+      ["15:31", [
+        "오늘 즐기자 언제 올지 모른다.",
+        "난 새벽파다"
+      ]],
+
+      ["15:32", [
+        "내가 알람 끄고 싶은데 비스테이지처럼"
+      ]],
+
+      ["15:33", [
+        "아니 너희들한테 알람 안 가게"
+      ]],
+
+      ["15:58", [
+        "근데 이거 한 달에 얼마여?"
+      ]],
+
+      ["15:59", [
+        "싸네 카톡 임티 다 쓰는 거 5000원 넘는데",
+        "싸다 라면 먹자.."
+      ]],
+
+      ["16:00", [
+        "돈 썼으니까 한 달 동안 라면으로 밥"
+      ]],
+
+      ["16:01", [
+        "부럽네 다들 짱짱하네"
+      ]],
+
+      ["16:03", [
+        "사진 좀 더 친근하게 바꿔야겠다"
+      ]],
+
+      ["16:04", [
+        "어때"
+      ]],
+
+      ["16:05", [
+        "이걸로 가야겠다"
+      ]],
+
+      ["16:06", [
+        "막내 I 가 무슨 허락이야",
+        "위 아래가 있지"
+      ]],
+
+      ["16:07", [
+        "내가 내 얼굴로 하면 보기가 좀 그래"
+      ]],
+
+      ["16:12", [
+        "자"
+      ]],
+
+      ["16:15", [
+        "원본 막 안 주지"
+      ]],
+
+      ["16:16", [
+        "마지막으로 바꾸고 안 바꾼ㄷ : 이제"
+      ]],
+
+      ["16:33", [
+        {
+          type: "reply",
+          quoted: "우제한테 다 일렀다!!!!",
+          text: "얌마 그건 아니지"
+        }
+      ]],
+
+      ["16:52", [
+        {
+          type: "image",
+          src: "images/pop_dog_20251217.jpg"
+        }
+      ]],
+
+      ["16:59", [
+        "어제 가위바위보 이겨서 퇴근 1순위다",
+        "행복하고만",
+        "꼴등 최우제 ㅋ"
+      ]],
+
+      ["17:00", [
+        "자진해서 제가 마지막 할게요 해야지 나 어릴 땐 후.."
+      ]],
+
+      ["17:01", [
+        "꼰대 맞는 것 같던데",
+        "저번에 무슨 사이트 검사하는 거",
+        "40중반인가 50중반으로 나오던데"
+      ]],
+
+      ["17:02", [
+        "이게 프로는 사실상 -5살인데",
+        "나는 꼰대라 달라"
+      ]],
+
+      ["17:03", [
+        "근데 이런 사람도 있고 저런 사람도 있는 거지",
+        "즐기다 가~"
+      ]],
+
+      ["17:04", [
+        "내 공간 아니야",
+        "직원이 보잖아",
+        "하"
+      ]],
+
+      ["17:08", [
+        "유니폼 낫밴",
+        "좋은 듯"
+      ]],
+
+      ["17:09", [
+        "원래보다 다른 재질",
+        "편함"
+      ]],
+
+      ["21:03", [
+        "춥다 감기 조심하레이"
+      ]],
+
+      ["21:05", [
+        "나는 이미 걸렸다 나아서 면역 있어",
+        "걱정마"
+      ]],
+
+      ["21:06", [
+        "에버랜드가 🤫"
+      ]],
+
+      ["21:07", [
+        "그때 진짜 동상 걸리는 줄"
+      ]],
+
+      ["21:08", [
+        "싸맨다고 되는 게 아녀",
+        "그 날씨는"
+      ]],
+
+      ["21:11", [
+        {
+          type: "reply",
+          quoted: "맞긴해... 나는 이제 김치보끔밥 먹을거당",
+          text: "인증해"
+        }
+      ]],
+
+      ["21:12", [
+        {
+          type: "reply",
+          quoted: "내일 기말고사 마지막인데 화이팅 한번 해주면 소원이 없다",
+          text: "3번으로 찍자 ㅎㅇㅌ"
+        }
+      ]],
+
+      ["21:13", [
+        "모르는 건 3번",
+        "저 사람은 공부 잘하니까 긴장만 풀어주면 되는 겨",
+        "나중에 성적 인증하세요"
+      ]],
+
+      ["21:14", [
+        "근데 고등학생은 기말 지금 아니잖아",
+        "대학생인가"
+      ]],
+
+      ["21:15", [
+        {
+          type: "reply",
+          quoted: "보통 고3은 수능 끝나고 바로 보고 그 밑에 학생들은 더 늦게 봐",
+          text: "꿀정보 좋다 더 똑똑해 졌어 유환중"
+        }
+      ]],
+
+      ["21:16", [
+        "요즘 그게 많이 뜨던데"
+      ]],
+
+      ["21:17", [
+        "일본 프로그램",
+        "🐑아치",
+        "물론 안 봤어",
+        "흑백요리사 보자",
+        "스포를 하자면"
+      ]],
+
+      ["21:18", [
+        {
+          type: "reply",
+          quoted: "그거 결국 건우처럼 사람 진짜 팔것같이 생긴애들 나왔지만 건우처럼 알고보면 착한애들만 나옴",
+          text: "건우는 근데 에겐 200%"
+        }
+      ]],
+
+      ["21:21", [
+        "근데 메이크업 하면 항상 트러블 나던데 어렵네 I",
+        "잘 씻는데",
+        "나만 그런 게 아녀",
+        "난 오일 쓰면 더 망해"
+      ]],
+
+      ["21:23", [
+        "내가 쓰는 거 괜찮던데 화장품은"
+      ]],
+
+      ["21:24", [
+        "남자 뷰티 유튜브 보고 찾아서 사는 건데",
+        "개좋음",
+        "클렌징도 좋은데 올리브영꺼",
+        "피부가 예민하긴 해"
+      ]],
+
+      ["21:26", [
+        "젠지때 피부 지옥 갔다가 피부과 가서 살아났지.."
+      ]],
+
+      ["22:21", [
+        "펜페스트 뭐하지 비상이네"
+      ]]
+
+    ]
+  },
+
+  /* ========================================
+     2025년 12월 18일
+  ======================================== */
+
+  {
+    date: "2025-12-18",
+    messages: [
+
+      ["00:04", [
+        "안 자니 애들아 자자",
+        "출근 해야지"
+      ]],
+
+      ["00:13", [
+        "자고 일어나서 일 해야지.."
+      ]],
+
+      ["00:14", [
+        "나도 백수 마렵네",
+        "돈 많은",
+        "복권 투자 가야하나"
+      ]],
+
+      ["00:15", [
+        "일단 16번 뽑 온다",
+        "하나 넣어봐"
+      ]],
+
+      ["14:03", [
+        "아침은 항상 힘드네"
+      ]],
+
+      ["14:04", [
+        "아아 원샷 해야겠네",
+        {
+          type: "reply",
+          quoted: "프게머의 아침 = 오후2시 (부럽다)",
+          text: "퇴근 새벽 4시"
+        }
+      ]],
+
+      ["14:05", [
+        "나는 사람은 보상 심리가 있어서 꼭 유튜브 보거나 웹툰 봐야해",
+        "새벽5~6시 잔다"
+      ]],
+
+      ["14:06", [
+        "많이 좋아진 것 원래 7시에 잤으니",
+        "늙어서 이제 빨리 자는 편",
+        "ㄱㅊ"
+      ]],
+
+      ["14:08", [
+        "작두,축살,당골,사신소년,공유몽 등등"
+      ]],
+
+      ["14:09", [
+        "무당 귀신 관련된 것 좋아함",
+        "웹툰"
+      ]],
+
+      ["14:10", [
+        "로맨스 빼고는 다 괜찮",
+        "꿈 안 꾼 지 꽤 오래됨",
+        "22살까지 1일 1꿈은 무조건"
+      ]],
+
+      ["14:11", [
+        "어릴 때 그 괴담레스토랑 보고",
+        "죽는 꿈 많이 꿨는데"
+      ]],
+
+      ["14:12", [
+        "꿈 이어서 꿔 본 적 있음",
+        "중간에 깨서 아 지금 깨면..",
+        "생각하면서 자니까 이어졌음"
+      ]],
+
+      ["14:13", [
+        "최대가 3일 연속",
+        "이어지는",
+        "무슨 전쟁에서 도망치는 꿈이었는데",
+        "존잼"
+      ]],
+
+      ["14:14", [
+        "자각몽은 꾸고 싶어도",
+        "안되던데",
+        "인지하면 다 쳐다본다길래 궁금해서"
+      ]],
+
+      ["14:15", [
+        {
+          type: "reply",
+          quoted: "심야괴담회 좋아하겠다",
+          text: "재밌어 이거"
+        }
+      ]],
+
+      ["14:16", [
+        {
+          type: "reply",
+          quoted: "책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어봐",
+          text: "내가 초6 때까지 독서왕이었는데"
+        },
+        "중1 때 롤 해서 공부 버림"
+      ]],
+
+      ["14:18", [
+        "롤 꿈도 꾼 적 있지",
+        "예지몽 같은"
+      ]],
+
+      ["14:19", [
+        "지는 건 100%야 승률",
+        "짐 싸던데 맨날"
+      ]],
+
+      ["14:44", [
+        "겜돌이들 특 피부 하얌",
+        "중학생 때 많이 탔는데"
+      ]],
+
+      ["14:46", [
+        {
+          type: "image",
+          src: "images/pop_mirror_20251220.png"
+        },
+        "이렇게 마를 때도",
+        "있었어",
+        "18살 강남으로 가기 전.."
+      ]],
+
+      ["14:48", [
+        "난 10시에 먹는 야식 무조건 먹어야 하는 줄 알았지"
+      ]],
+
+      ["14:49", [
+        "연습생 때 많이 쪘지"
+      ]],
+
+      ["14:51", [
+        {
+          type: "image",
+          src: "images/pop_school_20251220.png"
+        },
+        "어렸다"
+      ]],
+
+      ["14:52", [
+        "내가 고등학교 다닐 때",
+        "집에서 운동 맨날 해서",
+        "턱걸이 20개까지 했었는데"
+      ]],
+
+      ["14:53", [
+        "운동 한2~3주 하면 적응됨",
+        "피티 싸악 받고"
+      ]],
+
+      ["14:54", [
+        "올해 걷는 거랑 식단으로 10키로 넘게 뺐는데",
+        "롤드컵때 다 복구됨"
+      ]],
+
+      ["14:55", [
+        "오리고기 샐러드"
+      ]],
+
+      ["14:57", [
+        "걷는 거 1~2시간 정도?"
+      ]],
+
+      ["14:58", [
+        {
+          type: "reply",
+          quoted: "근데 지금은 춥자나 다른 방법 없다?",
+          text: "숨쉬기 봄 준비할게"
+        },
+        "2~3달에 10빠진 것 같은ㄷ",
+        "거기는 운동을 넘 늦게 해 저녁인데",
+        "저녁운동 안 좋아"
+      ]],
+
+      ["14:59", [
+        "노노 왕호형이 저녁 운동",
+        "안좋다함",
+        "낮에 하라고 했어"
+      ]],
+
+      ["15:00", [
+        "왕호형 꾸준한 운동러야",
+        "제카는 컨셉이야",
+        "상체충"
+      ]],
+
+      ["15:01", [
+        "이게 상체만 하는 애들이 꽤 많아",
+        "주변에",
+        "근데 새벽에 하디 갔다던데",
+        "진혁이형이 건우가 가자고",
+        "말해서 갔다는데"
+      ]],
+
+      ["15:02", [
+        "예스형 속 터질듯",
+        "아 같이 가셨어?",
+        "근데 예스형은 매일 운동 하시잖아"
+      ]],
+
+      ["15:03", [
+        "무죄야"
+      ]],
+
+      ["23:59", [
+        "잘 자라 내일 출근하면 주말이야"
+      ]]
+
+    ]
+  },
+
+  /* ========================================
+     2025년 12월 19일
+  ======================================== */
+
+  {
+    date: "2025-12-19",
+    messages: [
+
+      ["17:35", [
+        "개운하네"
+      ]],
+
+      ["17:36", [
+        "9출 6퇴반 슬슬 준비하자"
+      ]],
+
+      ["19:22", [
+        "카톡 롤백 진짜 좋고만"
+      ]],
+
+      ["19:23", [
+        "자동으로 당했는데",
+        "업데이트"
+      ]],
+
+      ["19:24", [
+        "친구 업뎃 눌리고 있었는데",
+        "우리 집이 불 났지 뭐야",
+        "다시 돌아왔으니 봐준다"
+      ]],
+
+      ["19:40", [
+        "올해 면허 따 본 사람"
+      ]],
+
+      ["19:41", [
+        "쉽나",
+        "1주 다니면 따나?",
+        {
+          type: "reply",
+          quoted: "10년전은 안될까",
+          text: "재발급 안하나요"
+        }
+      ]],
+
+      ["19:42", [
+        "한 4년 전 꿈에서 운전했을 때 진짜 실감 나게 잘 했는데"
+      ]],
+
+      ["19:43", [
+        "곧 반오십인데 면허 준비해야지"
+      ]],
+
+      ["19:44", [
+        "1종 따는 게 더 효율 좋잖아"
+      ]],
+
+      ["19:45", [
+        "2종 2주컷 가봐야지"
+      ]],
+
+      ["19:46", [
+        "차 몰라",
+        "굴러가기만 하면 돼"
+      ]],
+
+      ["19:47", [
+        "면허는 여유 있으면 따 놓고",
+        "일산은 자전거를 타야",
+        "좋음"
+      ]],
+
+      ["19:48", [
+        "집 갈때마다",
+        "내가 운전하면",
+        "ㄱㅊ지"
+      ]],
+
+      ["19:49", [
+        {
+          type: "reply",
+          quoted: "자전거 잘타?",
+          text: "고수야"
+        }
+      ]],
+
+      ["19:50", [
+        "강아지는 덩치 더 큰 애가 소금이고 작은 애가 봄이요"
+      ]],
+
+      ["19:52", [
+        {
+          type: "image",
+          src: "images/pop_dogs_20251219.jpg"
+        }
+      ]]
+
+    ]
+  },
+
+{
+  date: "2025-12-20",
+  messages: [
+
+    ["00:58", [
+      {
+        type: "reply",
+        quoted: "누가 큰거고 작은거야",
+        text: "왼쪽이 큰"
+      }
+    ]],
+
+    ["14:16", [
+      {
+        type: "reply",
+        quoted: "보통 연관성 있게 이름 비슷하게 짓지않아!?",
+        text: "내가 안해서 모르겠어유"
+      },
+      "모닝"
+    ]],
+
+    ["14:17", [
+      "비 오던데"
+    ]],
+
+    ["16:38", [
+      "밥 먹자 😛"
+    ]],
+
+    ["16:39", [
+      "나중에 은퇴하면 대형견 키워보고 싶다"
+    ]],
+
+    ["16:40", [
+      "제육 먹어요 젤 좋음",
+      {
+        type: "reply",
+        quoted: "리트리버",
+        text: "yes"
+      }
+    ]],
+
+    ["16:41", [
+      "근데 털 빠지는 거 보니",
+      "각 잡고 키워야 해"
+    ]],
+
+    ["20:37", [
+      {
+        type: "reply",
+        quoted: "환중아 고생이 많다",
+        text: "감사합니다 땡큐 :)"
+      }
+    ]]
+
+  ]
+}
+
+];
+
+/* ==========================================
+   오프라인 번역
+
+   T(원문, 영어, 일본어, 간체, 번체)
+   등록된 문장은 버튼을 누르면 즉시 번역.
+========================================== */
+
+const translations = {};
+
+function T(original, en, ja, cn, tw) {
+  translations[original] = {
+    en,
+    ja,
+    "zh-CN": cn,
+    "zh-TW": tw
+  };
+}
+
+/* ========================================
+   12월 17일 번역
+======================================== */
+
+T("바쁘다",
+  "I'm busy.",
+  "忙しい。",
+  "忙着呢。",
+  "忙著呢。");
+
+T("나이 먹고 2026가보자",
+  "Let's get older and head into 2026.",
+  "また一つ歳を取って2026年に行こう。",
+  "又长一岁，迎接2026年吧。",
+  "又長一歲，迎接2026年吧。");
+
+T("말은 알아서들 하고 메뉴도 알아서들 먹죠 추천대로 안 먹잖슴",
+  "Everyone says what they want and chooses their own food. Nobody follows recommendations.",
+  "みんな好きに話してメニューも自分で選ぶし、おすすめ通りには食べないじゃん。",
+  "大家自己说自己的，吃什么也自己选，根本不照推荐吃嘛。",
+  "大家自己說自己的，吃什麼也自己選，根本不照推薦吃嘛。");
+
+T("취두부 인증해봐",
+  "Show me proof you ate stinky tofu.",
+  "臭豆腐を食べた証拠を見せて。",
+  "晒一下吃臭豆腐的证据。",
+  "曬一下吃臭豆腐的證據。");
+
+T("배경 쓸 사진이",
+  "The photo to use as a background...",
+  "背景に使う写真が…。",
+  "用来做背景的照片……",
+  "用來做背景的照片……");
+
+T("이거 근데 미자도 할 수 있나 어플",
+  "Can minors use this app?",
+  "でもこのアプリ、未成年も使えるの？",
+  "不过这个App未成年人也能用吗？",
+  "不過這個App未成年人也能用嗎？");
+
+T("술 얘기 못하겠네",
+  "Guess I can't talk about alcohol.",
+  "お酒の話はできないな。",
+  "看来不能聊酒了。",
+  "看來不能聊酒了。");
+
+T("근데 나 술 안 마셨는데 이번에",
+  "But I didn't drink this time.",
+  "でも今回、俺はお酒飲んでないよ。",
+  "不过我这次没喝酒。",
+  "不過我這次沒喝酒。");
+
+T("런 했어",
+  "I ran away.",
+  "逃げた。",
+  "我溜了。",
+  "我溜了。");
+
+T("개피곤해서 잤어",
+  "I was so exhausted that I slept.",
+  "めちゃくちゃ疲れて寝た。",
+  "太累了，我就睡了。",
+  "太累了，我就睡了。");
+
+T("나이 먹으니까 힘들다 이제",
+  "Getting older makes things tough.",
+  "歳を取るともうしんどいな。",
+  "年纪大了，现在真累。",
+  "年紀大了，現在真累。");
+
+T("답장 기능보소",
+  "Look at this reply feature.",
+  "この返信機能すごいな。",
+  "瞧这回复功能。",
+  "瞧這回覆功能。");
+
+T("제한도 있네",
+  "There's a limit too.",
+  "制限もあるんだ。",
+  "居然还有限制。",
+  "居然還有限制。");
+
+T("잘하자 권한 많네",
+  "Let's be good. There are lots of permissions.",
+  "ちゃんとしよう。権限が多いね。",
+  "好好表现吧，权限还挺多。",
+  "好好表現吧，權限還挺多。");
+
+T("글자수가 뭔 말이여",
+  "What does the character count mean?",
+  "文字数ってどういうこと？",
+  "字数是什么意思？",
+  "字數是什麼意思？");
+
+T("1일 50?",
+  "50 per day?",
+  "1日50？",
+  "一天50？",
+  "一天50？");
+
+T("아",
+  "Oh.",
+  "あ。",
+  "啊。",
+  "啊。");
+
+T("근들갑",
+  "I overreacted.",
+  "大げさに騒いじゃった。",
+  "大惊小怪了。",
+  "大驚小怪了。");
+
+T("오늘 즐기자 언제 올지 모른다.",
+  "Let's enjoy today. Who knows when it'll come again?",
+  "今日は楽しもう。次がいつか分からないから。",
+  "今天好好享受吧，不知道下次是什么时候。",
+  "今天好好享受吧，不知道下次是什麼時候。");
+
+T("난 새벽파다",
+  "I'm a night owl.",
+  "俺は夜型だ。",
+  "我是夜猫子。",
+  "我是夜貓子。");
+
+T("내가 알람 끄고 싶은데 비스테이지처럼",
+  "I want to turn off notifications like on b.stage.",
+  "b.stageみたいに通知をオフにしたいんだよ。",
+  "我想像b.stage那样关掉通知。",
+  "我想像b.stage那樣關掉通知。");
+
+T("아니 너희들한테 알람 안 가게",
+  "No, so you guys don't receive alerts.",
+  "いや、君たちに通知が行かないように。",
+  "不是，我是说不让你们收到通知。",
+  "不是，我是說不讓你們收到通知。");
+
+T("근데 이거 한 달에 얼마여?",
+  "How much does this cost per month?",
+  "ていうか、これ月いくら？",
+  "话说这个一个月多少钱？",
+  "話說這個一個月多少錢？");
+
+T("싸네 카톡 임티 다 쓰는 거 5000원 넘는데",
+  "It's cheap. All KakaoTalk emojis cost over 5,000 won.",
+  "安いね。カカオトークの絵文字を全部使うと5000ウォン超えるのに。",
+  "便宜啊，KakaoTalk的表情包全用上都超过5000韩元了。",
+  "便宜啊，KakaoTalk的表情包全用上都超過5000韓元了。");
+
+T("싸다 라면 먹자..",
+  "So cheap. Let's eat ramen...",
+  "安いな。ラーメン食べよう…。",
+  "真便宜。吃拉面吧……",
+  "真便宜。吃拉麵吧……");
+
+T("돈 썼으니까 한 달 동안 라면으로 밥",
+  "Since we spent money, ramen for meals all month...",
+  "お金使ったから1か月ずっとラーメンでご飯を…。",
+  "既然花钱了，这一个月就吃拉面过日子……",
+  "既然花錢了，這一個月就吃拉麵過日子……");
+
+T("부럽네 다들 짱짱하네",
+  "I'm jealous. Everyone's doing great.",
+  "羨ましい。みんなすごいね。",
+  "真羡慕，大家都好厉害。",
+  "真羨慕，大家都好厲害。");
+
+T("사진 좀 더 친근하게 바꿔야겠다",
+  "I should change my photo to something friendlier.",
+  "もっと親しみやすい写真に変えよう。",
+  "该换张更亲切的照片了。",
+  "該換張更親切的照片了。");
+
+T("어때",
+  "How is it?",
+  "どう？",
+  "怎么样？",
+  "怎麼樣？");
+
+T("이걸로 가야겠다",
+  "I'll go with this one.",
+  "これにしよう。",
+  "就用这张吧。",
+  "就用這張吧。");
+
+T("막내 I 가 무슨 허락이야",
+  "What permission does the youngest I need?",
+  "末っ子のIに何の許可がいるんだよ。",
+  "忙内I还要什么许可啊？",
+  "忙內I還要什麼許可啊？");
+
+T("위 아래가 있지",
+  "There's a hierarchy.",
+  "上下関係があるだろ。",
+  "总得有个长幼顺序吧。",
+  "總得有個長幼順序吧。");
+
+T("내가 내 얼굴로 하면 보기가 좀 그래",
+  "It feels awkward looking at my own face.",
+  "自分の顔にすると、見るのがちょっと気まずい。",
+  "用自己的脸，自己看着都有点别扭。",
+  "用自己的臉，自己看著都有點彆扭。");
+
+T("자",
+  "Here.",
+  "ほら。",
+  "来。",
+  "來。");
+
+T("원본 막 안 주지",
+  "I don't just hand out the original photo.",
+  "元の写真はそう簡単にあげないよ。",
+  "原图可不能随便给。",
+  "原圖可不能隨便給。");
+
+T("마지막으로 바꾸고 안 바꾼ㄷ : 이제",
+  "I'll change it one last time.",
+  "最後に変えて、もう変えない。",
+  "最后换一次，以后就不换了。",
+  "最後換一次，以後就不換了。");
+
+T("우제한테 다 일렀다!!!!",
+  "I told Woo-je everything!!!!",
+  "ウジェに全部言いつけた!!!!",
+  "我全都告诉祐齐了!!!!",
+  "我全都告訴祐齊了!!!!");
+
+T("얌마 그건 아니지",
+  "Hey, that's not right.",
+  "おい、それは違うだろ。",
+  "喂，那可不行。",
+  "喂，那可不行。");
+
+T("어제 가위바위보 이겨서 퇴근 1순위다",
+  "I won rock-paper-scissors and got to leave work first.",
+  "昨日じゃんけんで勝って、退勤1番だ。",
+  "昨天猜拳赢了，我第一个下班。",
+  "昨天猜拳贏了，我第一個下班。");
+
+T("행복하고만",
+  "I'm happy.",
+  "幸せだな。",
+  "真幸福啊。",
+  "真幸福啊。");
+
+T("꼴등 최우제 ㅋ",
+  "Choi Woo-je came last, lol.",
+  "最下位はチェ・ウジェ（笑）。",
+  "最后一名崔祐齐，哈哈。",
+  "最後一名崔祐齊，哈哈。");
+
+T("자진해서 제가 마지막 할게요 해야지 나 어릴 땐 후..",
+  "Back when I was young, I would've volunteered to go last... sigh.",
+  "俺が子供の頃なら「僕が最後にやります」って自分から言わないと…。はあ。",
+  "我小时候还得主动说“我最后一个来”……唉。",
+  "我小時候還得主動說「我最後一個來」……唉。");
+
+T("꼰대 맞는 것 같던데",
+  "I think I really am old-fashioned.",
+  "俺って確かに説教くさいかも。",
+  "我好像真挺老派的。",
+  "我好像真挺老派的。");
+
+T("저번에 무슨 사이트 검사하는 거",
+  "That website test I took last time...",
+  "この前、何かのサイトで診断したら…。",
+  "上次在某个网站做的测试……",
+  "上次在某個網站做的測試……");
+
+T("40중반인가 50중반으로 나오던데",
+  "It said mid-40s or mid-50s.",
+  "40代半ばか50代半ばって出たんだけど。",
+  "结果显示是四十多岁或五十多岁。",
+  "結果顯示是四十多歲或五十多歲。");
+
+T("이게 프로는 사실상 -5살인데",
+  "Being a pro basically takes five years off your age.",
+  "プロは実質5歳若いようなものだけど。",
+  "职业选手其实相当于减五岁。",
+  "職業選手其實相當於減五歲。");
+
+T("나는 꼰대라 달라",
+  "But I'm different because I'm old-fashioned.",
+  "でも俺は頑固だから違う。",
+  "但我这种老派的人不一样。",
+  "但我這種老派的人不一樣。");
+
+T("근데 이런 사람도 있고 저런 사람도 있는 거지",
+  "Some people are like this, others like that.",
+  "まあ、こういう人もいれば、ああいう人もいるよね。",
+  "不过有这样的人，也有那样的人嘛。",
+  "不過有這樣的人，也有那樣的人嘛。");
+
+T("즐기다 가~",
+  "Have fun while you're here~",
+  "楽しんでいってね〜。",
+  "玩得开心再走吧～",
+  "玩得開心再走吧～");
+
+T("내 공간 아니야",
+  "This isn't my private space.",
+  "ここは俺だけの空間じゃない。",
+  "这里不是我自己的空间。",
+  "這裡不是我自己的空間。");
+
+T("직원이 보잖아",
+  "The staff can see it.",
+  "スタッフが見るじゃん。",
+  "工作人员也会看啊。",
+  "工作人員也會看啊。");
+
+T("하",
+  "Sigh.",
+  "はあ。",
+  "唉。",
+  "唉。");
+
+T("유니폼 낫밴",
+  "The uniform's not bad.",
+  "ユニフォーム、悪くない。",
+  "队服还不错。",
+  "隊服還不錯。");
+
+T("좋은 듯",
+  "Seems good.",
+  "いい感じ。",
+  "感觉不错。",
+  "感覺不錯。");
+
+T("원래보다 다른 재질",
+  "It's a different material from before.",
+  "前とは違う素材だね。",
+  "材质跟之前不一样。",
+  "材質跟之前不一樣。");
+
+T("편함",
+  "It's comfortable.",
+  "楽だよ。",
+  "挺舒服的。",
+  "挺舒服的。");
+
+T("춥다 감기 조심하레이",
+  "It's cold. Watch out for colds.",
+  "寒いな。みんな風邪に気をつけてね。",
+  "好冷，大家注意别感冒。",
+  "好冷，大家注意別感冒。");
+
+T("나는 이미 걸렸다 나아서 면역 있어",
+  "I already caught it and recovered, so I'm immune.",
+  "俺はもうかかって治ったから免疫あるよ。",
+  "我已经得过又好了，有免疫力了。",
+  "我已經得過又好了，有免疫力了。");
+
+T("걱정마",
+  "Don't worry.",
+  "心配しないで。",
+  "别担心。",
+  "別擔心。");
+
+T("에버랜드가 🤫",
+  "Everland... 🤫",
+  "エバーランドが…🤫",
+  "爱宝乐园……🤫",
+  "愛寶樂園……🤫");
+
+T("그때 진짜 동상 걸리는 줄",
+  "I seriously thought I'd get frostbite.",
+  "あのとき本当に凍傷になるかと思った。",
+  "那时候真以为要冻伤了。",
+  "那時候真以為要凍傷了。");
+
+T("싸맨다고 되는 게 아녀",
+  "Bundling up doesn't help.",
+  "着込んでもどうにもならない。",
+  "裹得再严实也没用。",
+  "裹得再嚴實也沒用。");
+
+T("그 날씨는",
+  "Not in that kind of weather.",
+  "あんな天気じゃね。",
+  "那种天气根本没办法。",
+  "那種天氣根本沒辦法。");
+
+T("맞긴해... 나는 이제 김치보끔밥 먹을거당",
+  "True... I'm going to eat kimchi fried rice now.",
+  "そうだね…。これからキムチチャーハン食べるよ。",
+  "也是……我现在要去吃泡菜炒饭啦。",
+  "也是……我現在要去吃泡菜炒飯啦。");
+
+T("인증해",
+  "Show me proof.",
+  "証拠見せて。",
+  "发照片证明一下。",
+  "發照片證明一下。");
+
+T("내일 기말고사 마지막인데 화이팅 한번 해주면 소원이 없다",
+  "Tomorrow is my last final exam. If you cheer me on, I'll have no regrets.",
+  "明日が最後の期末試験なんだけど、応援してくれたらもう思い残すことはない。",
+  "明天是最后一门期末考试，能给我加个油就心满意足了。",
+  "明天是最後一門期末考試，能給我加個油就心滿意足了。");
+
+T("3번으로 찍자 ㅎㅇㅌ",
+  "Pick number 3. Fighting!",
+  "3番にしよう。ファイト！",
+  "选3号吧，加油！",
+  "選3號吧，加油！");
+
+T("모르는 건 3번",
+  "For anything you don't know, pick number 3.",
+  "分からない問題は3番。",
+  "不会的题就选3号。",
+  "不會的題就選3號。");
+
+T("저 사람은 공부 잘하니까 긴장만 풀어주면 되는 겨",
+  "That person studies well, so they just need to relax.",
+  "あの人は勉強できるから、緊張をほぐせば大丈夫。",
+  "那个人学习挺好的，只要放松别紧张就行。",
+  "那個人學習挺好的，只要放鬆別緊張就行。");
+
+T("나중에 성적 인증하세요",
+  "Show me your grades later.",
+  "あとで成績を見せてください。",
+  "之后记得晒成绩。",
+  "之後記得曬成績。");
+
+T("근데 고등학생은 기말 지금 아니잖아",
+  "But high schoolers aren't taking finals now, are they?",
+  "でも高校生の期末試験って今じゃないよね？",
+  "不过高中生现在不是期末考试的时候吧？",
+  "不過高中生現在不是期末考試的時候吧？");
+
+T("대학생인가",
+  "Maybe they're a college student?",
+  "大学生かな。",
+  "是大学生吗？",
+  "是大學生嗎？");
+
+T("보통 고3은 수능 끝나고 바로 보고 그 밑에 학생들은 더 늦게 봐",
+  "Usually seniors take them right after the college entrance exam, and younger students take them later.",
+  "普通、高3は入試が終わったらすぐ試験で、下の学年はもっと遅く受けるよ。",
+  "一般高三在大学入学考试结束后马上考，低年级学生会晚一点考。",
+  "一般高三在大學入學考試結束後馬上考，低年級學生會晚一點考。");
+
+T("꿀정보 좋다 더 똑똑해 졌어 유환중",
+  "Great tip. I've gotten smarter, Yoo Hwan-jung.",
+  "いい情報だ。さらに賢くなったぞ、ユ・ファンジュン。",
+  "好消息，我又变聪明了，柳焕中。",
+  "好消息，我又變聰明了，柳煥中。");
+
+T("요즘 그게 많이 뜨던데",
+  "That has been trending a lot lately.",
+  "最近それがよく話題になってるよね。",
+  "最近那个挺火的。",
+  "最近那個挺紅的。");
+
+T("일본 프로그램",
+  "A Japanese program.",
+  "日本の番組。",
+  "日本的节目。",
+  "日本的節目。");
+
+T("🐑아치",
+  "A delinquent 🐑.",
+  "不良の🐑。",
+  "小混混🐑。",
+  "小混混🐑。");
+
+T("물론 안 봤어",
+  "Of course I haven't watched it.",
+  "もちろん見てないけど。",
+  "当然我没看。",
+  "當然我沒看。");
+
+T("흑백요리사 보자",
+  "Let's watch Culinary Class Wars.",
+  "『白と黒のスプーン』を見よう。",
+  "看看《黑白厨师》吧。",
+  "看看《黑白大廚》吧。");
+
+T("스포를 하자면",
+  "If I were to spoil it...",
+  "ネタバレすると…。",
+  "要剧透的话……",
+  "要劇透的話……");
+
+T("그거 결국 건우처럼 사람 진짜 팔것같이 생긴애들 나왔지만 건우처럼 알고보면 착한애들만 나옴",
+  "They looked like they'd sell people, like Geon-woo, but they all turned out kind.",
+  "ゴヌみたいに人を売りそうな顔の人が出てきたけど、ゴヌと同じで実はみんな優しい人だった。",
+  "出现了一些看着像建佑那样会把人卖掉的人，但跟建佑一样，其实都是好人。",
+  "出現了一些看著像建佑那樣會把人賣掉的人，但跟建佑一樣，其實都是好人。");
+
+T("건우는 근데 에겐 200%",
+  "Geon-woo is 200% soft-hearted, though.",
+  "でもゴヌは200％エゲン系だよ。",
+  "不过建佑可是200%的温柔型。",
+  "不過建佑可是200%的溫柔型。");
+
+T("근데 메이크업 하면 항상 트러블 나던데 어렵네 I",
+  "Makeup always makes my skin break out. It's hard.",
+  "でもメイクするといつも肌荒れするんだよ。難しいな。",
+  "但我每次化妆都会长东西，真难啊。",
+  "但我每次化妝都會長東西，真難啊。");
+
+T("잘 씻는데",
+  "I wash my face thoroughly, though.",
+  "ちゃんと洗ってるのに。",
+  "我明明洗得很干净。",
+  "我明明洗得很乾淨。");
+
+T("나만 그런 게 아녀",
+  "It's not just me.",
+  "俺だけじゃないんだな。",
+  "原来不只是我。",
+  "原來不只是我。");
+
+T("난 오일 쓰면 더 망해",
+  "Oil makes my skin worse.",
+  "俺はオイル使うともっとひどくなる。",
+  "我用油反而更严重。",
+  "我用油反而更嚴重。");
+
+T("내가 쓰는 거 괜찮던데 화장품은",
+  "The skincare products I use are pretty good.",
+  "俺が使ってる化粧品は結構いいよ。",
+  "不过我用的护肤品还不错。",
+  "不過我用的保養品還不錯。");
+
+T("남자 뷰티 유튜브 보고 찾아서 사는 건데",
+  "I buy them after watching men's beauty videos on YouTube.",
+  "男性美容系YouTubeを見て探して買ってるんだ。",
+  "我是看男性美妆YouTube视频找来买的。",
+  "我是看男性美妝YouTube影片找來買的。");
+
+T("개좋음",
+  "They're really good.",
+  "めっちゃいい。",
+  "超级好用。",
+  "超級好用。");
+
+T("클렌징도 좋은데 올리브영꺼",
+  "The cleanser from Olive Young is good too.",
+  "オリーブヤングのクレンジングもいいよ。",
+  "Olive Young的洁面产品也不错。",
+  "Olive Young的潔面產品也不錯。");
+
+T("피부가 예민하긴 해",
+  "My skin is sensitive, though.",
+  "でも肌は敏感なんだよね。",
+  "不过我皮肤确实敏感。",
+  "不過我皮膚確實敏感。");
+
+T("젠지때 피부 지옥 갔다가 피부과 가서 살아났지..",
+  "At Gen.G, my skin was a disaster. The dermatologist saved me...",
+  "Gen.Gにいたとき肌がひどかったけど、皮膚科に行って救われた…。",
+  "在Gen.G的时候皮肤糟透了，后来去皮肤科才救回来……",
+  "在Gen.G的時候皮膚糟透了，後來去皮膚科才救回來……");
+
+T("펜페스트 뭐하지 비상이네",
+  "What am I going to do for Fan Fest? This is an emergency.",
+  "ファンフェスで何しよう。やばいな。",
+  "粉丝节要做什么啊，出大事了。",
+  "粉絲節要做什麼啊，出大事了。");
+
+/* ========================================
+   12월 18일 번역
+======================================== */
+
+T("안 자니 애들아 자자",
+  "Aren't you guys sleeping? Let's go to bed.",
+  "みんな寝ないの？寝よう。",
+  "你们还不睡吗？睡觉吧。",
+  "你們還不睡嗎？睡覺吧。");
+
+T("출근 해야지",
+  "We have to go to work.",
+  "仕事に行かなきゃ。",
+  "还得上班呢。",
+  "還得上班呢。");
+
+T("자고 일어나서 일 해야지..",
+  "We need to sleep, wake up, and work...",
+  "寝て起きて仕事しないとね…。",
+  "睡醒了还得工作……",
+  "睡醒了還得工作……");
+
+T("나도 백수 마렵네",
+  "I kind of want to be unemployed too.",
+  "俺も無職になりたいな。",
+  "我也想当无业游民了。",
+  "我也想當無業遊民了。");
+
+T("돈 많은",
+  "A rich one.",
+  "お金持ちの。",
+  "有钱的那种。",
+  "有錢的那種。");
+
+T("복권 투자 가야하나",
+  "Should I invest in lottery tickets?",
+  "宝くじに投資するべきかな。",
+  "要不要投资彩票呢？",
+  "要不要投資彩券呢？");
+
+T("일단 16번 뽑 온다",
+  "I'll pick number 16 for now.",
+  "とりあえず16番を選んでくる。",
+  "我先去选16号。",
+  "我先去選16號。");
+
+T("하나 넣어봐",
+  "Try putting one in.",
+  "一つ入れてみて。",
+  "试着放一个进去。",
+  "試著放一個進去。");
+
+T("아침은 항상 힘드네",
+  "Mornings are always hard.",
+  "朝はいつもしんどいね。",
+  "早上总是很难熬。",
+  "早上總是很難熬。");
+
+T("아아 원샷 해야겠네",
+  "I should chug an iced Americano.",
+  "アイスアメリカーノを一気飲みしないと。",
+  "得一口气喝完冰美式了。",
+  "得一口氣喝完冰美式了。");
+
+T("프게머의 아침 = 오후2시 (부럽다)",
+  "A pro gamer's morning = 2 p.m. (I'm jealous).",
+  "プロゲーマーの朝＝午後2時（羨ましい）。",
+  "职业选手的早晨＝下午2点（羡慕）。",
+  "職業選手的早晨＝下午2點（羨慕）。");
+
+T("퇴근 새벽 4시",
+  "I get off work at 4 a.m.",
+  "仕事が終わるのは朝4時。",
+  "凌晨4点才下班。",
+  "凌晨4點才下班。");
+
+T("나는 사람은 보상 심리가 있어서 꼭 유튜브 보거나 웹툰 봐야해",
+  "I need some reward time, so I have to watch YouTube or read webtoons.",
+  "自分へのご褒美が必要だから、YouTubeかウェブトゥーンを見ないと。",
+  "我总需要奖励自己，所以一定要看看YouTube或者网漫。",
+  "我總需要獎勵自己，所以一定要看看YouTube或者網漫。");
+
+T("새벽5~6시 잔다",
+  "I sleep at 5 or 6 a.m.",
+  "朝5〜6時に寝る。",
+  "凌晨五六点睡。",
+  "凌晨五六點睡。");
+
+T("많이 좋아진 것 원래 7시에 잤으니",
+  "It's much better now. I used to sleep at seven.",
+  "かなり改善したよ。前は7時に寝てたから。",
+  "已经改善很多了，以前七点才睡。",
+  "已經改善很多了，以前七點才睡。");
+
+T("늙어서 이제 빨리 자는 편",
+  "I'm getting old, so I go to bed earlier now.",
+  "歳を取って、最近は早めに寝るほう。",
+  "年纪大了，现在睡得比较早。",
+  "年紀大了，現在睡得比較早。");
+
+T("ㄱㅊ",
+  "It's fine.",
+  "大丈夫。",
+  "没事。",
+  "沒事。");
+
+T("작두,축살,당골,사신소년,공유몽 등등",
+  "Jakdu, Chuksal, Danggol, Sasin Sonyeon, Gongyumong, and so on.",
+  "『チャクトゥ』『チュクサル』『ダンゴル』『死神少年』『共有夢』など。",
+  "《Jakdu》《Chuksal》《Danggol》《死神少年》《共享梦》等等。",
+  "《Jakdu》《Chuksal》《Danggol》《死神少年》《共享夢》等等。");
+
+T("무당 귀신 관련된 것 좋아함",
+  "I like stuff about shamans and ghosts.",
+  "巫女や幽霊に関するものが好き。",
+  "我喜欢巫师、鬼怪之类的东西。",
+  "我喜歡巫師、鬼怪之類的東西。");
+
+T("웹툰",
+  "Webtoons.",
+  "ウェブトゥーン。",
+  "网漫。",
+  "網漫。");
+
+T("로맨스 빼고는 다 괜찮",
+  "Anything except romance is fine.",
+  "恋愛もの以外なら何でもいい。",
+  "除了爱情题材都可以。",
+  "除了愛情題材都可以。");
+
+T("꿈 안 꾼 지 꽤 오래됨",
+  "It's been a long time since I had a dream.",
+  "しばらく夢を見てない。",
+  "已经很久没做梦了。",
+  "已經很久沒做夢了。");
+
+T("22살까지 1일 1꿈은 무조건",
+  "Until I was 22, I definitely dreamed once a day.",
+  "22歳までは絶対に毎日夢を見てた。",
+  "22岁以前每天至少做一个梦。",
+  "22歲以前每天至少做一個夢。");
+
+T("어릴 때 그 괴담레스토랑 보고",
+  "When I was young, after watching Ghost Stories Restaurant...",
+  "子供の頃『怪談レストラン』を見て…。",
+  "小时候看了《怪谈餐厅》以后……",
+  "小時候看了《怪談餐廳》以後……");
+
+T("죽는 꿈 많이 꿨는데",
+  "I had a lot of dreams about dying.",
+  "死ぬ夢をたくさん見たんだ。",
+  "经常梦到自己死掉。",
+  "經常夢到自己死掉。");
+
+T("꿈 이어서 꿔 본 적 있음",
+  "I've had dreams that continued where they left off.",
+  "夢の続きを見たことがある。",
+  "我做过接着上次继续的梦。",
+  "我做過接著上次繼續的夢。");
+
+T("중간에 깨서 아 지금 깨면..",
+  "I woke up and thought, 'If I wake up now...'",
+  "途中で目が覚めて「今起きたら…」と思って…。",
+  "中途醒来想着“现在醒了的话……”",
+  "中途醒來想著「現在醒了的話……」");
+
+T("생각하면서 자니까 이어졌음",
+  "I fell asleep thinking about it, and the dream continued.",
+  "そう思いながら寝たら続きが見られた。",
+  "想着这些继续睡，梦就接上了。",
+  "想著這些繼續睡，夢就接上了。");
+
+T("최대가 3일 연속",
+  "The longest was three days in a row.",
+  "最長で3日連続。",
+  "最多连续三天。",
+  "最多連續三天。");
+
+T("이어지는",
+  "It kept continuing.",
+  "続いてた。",
+  "一直延续。",
+  "一直延續。");
+
+T("무슨 전쟁에서 도망치는 꿈이었는데",
+  "It was a dream about running away from some war.",
+  "何かの戦争から逃げる夢だったんだけど。",
+  "好像是在战争中逃跑的梦。",
+  "好像是在戰爭中逃跑的夢。");
+
+T("존잼",
+  "It was so fun.",
+  "めっちゃ面白かった。",
+  "超级有意思。",
+  "超級有意思。");
+
+T("자각몽은 꾸고 싶어도",
+  "Even though I want to have a lucid dream...",
+  "明晰夢を見たくても…。",
+  "虽然我想做清醒梦……",
+  "雖然我想做清醒夢……");
+
+T("안되던데",
+  "I can't seem to do it.",
+  "なかなかできない。",
+  "就是做不到。",
+  "就是做不到。");
+
+T("인지하면 다 쳐다본다길래 궁금해서",
+  "I heard everyone stares at you once you realize you're dreaming, so I'm curious.",
+  "夢だと気づくとみんながこっちを見るらしくて、気になる。",
+  "听说意识到自己在做梦时，梦里的人都会盯着你，所以很好奇。",
+  "聽說意識到自己在做夢時，夢裡的人都會盯著你，所以很好奇。");
+
+T("심야괴담회 좋아하겠다",
+  "You'd probably like Late Night Ghost Talk.",
+  "『深夜怪談会』好きそう。",
+  "你应该会喜欢《深夜怪谈会》。",
+  "你應該會喜歡《深夜怪談會》。");
+
+T("재밌어 이거",
+  "This is fun.",
+  "これ面白いよ。",
+  "这个很好看。",
+  "這個很好看。");
+
+T("책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어봐",
+  "Don't you read books? Try Dallergut Dream Department Store.",
+  "本は読まないの？夢の話なら『ダラグート夢百貨店』が面白いよ。",
+  "你不看书吗？梦的故事推荐《达勒古特梦百货店》。",
+  "你不看書嗎？夢的故事推薦《達勒古特夢百貨店》。");
+
+T("내가 초6 때까지 독서왕이었는데",
+  "I was a reading champion until sixth grade.",
+  "小6までは読書王だったんだけど。",
+  "我小学六年级以前可是读书王。",
+  "我小學六年級以前可是讀書王。");
+
+T("중1 때 롤 해서 공부 버림",
+  "I started playing LoL in seventh grade and gave up studying.",
+  "中1でLoLを始めて勉強を捨てた。",
+  "初一开始玩英雄联盟，就放弃学习了。",
+  "國一開始玩英雄聯盟，就放棄學習了。");
+
+T("롤 꿈도 꾼 적 있지",
+  "I've dreamed about LoL too.",
+  "LoLの夢も見たことある。",
+  "也做过英雄联盟的梦。",
+  "也做過英雄聯盟的夢。");
+
+T("예지몽 같은",
+  "Like a prophetic dream.",
+  "予知夢みたいな。",
+  "像预知梦一样。",
+  "像預知夢一樣。");
+
+T("지는 건 100%야 승률",
+  "If I dream of losing, the result is certain.",
+  "負ける夢は的中率100％。",
+  "梦见输的话，准确率百分之百。",
+  "夢見輸的話，準確率百分之百。");
+
+T("짐 싸던데 맨날",
+  "I was always packing my bags.",
+  "いつも荷物をまとめてた。",
+  "每次都在收拾行李。",
+  "每次都在收拾行李。");
+
+T("겜돌이들 특 피부 하얌",
+  "Gamers tend to have pale skin.",
+  "ゲーマーあるある、肌が白い。",
+  "游戏宅的特点就是皮肤白。",
+  "遊戲宅的特點就是皮膚白。");
+
+T("중학생 때 많이 탔는데",
+  "I was pretty tan in middle school.",
+  "中学生のときは結構日焼けしてたけど。",
+  "我初中的时候晒得挺黑的。",
+  "我國中的時候曬得挺黑的。");
+
+T("이렇게 마를 때도",
+  "There was a time when I was this thin.",
+  "こんなに痩せてた時期も。",
+  "也有这么瘦的时候。",
+  "也有這麼瘦的時候。");
+
+T("있었어",
+  "There was.",
+  "あったよ。",
+  "有过。",
+  "有過。");
+
+T("18살 강남으로 가기 전..",
+  "Before I moved to Gangnam at 18...",
+  "18歳で江南に行く前…。",
+  "18岁去江南之前……",
+  "18歲去江南之前……");
+
+T("난 10시에 먹는 야식 무조건 먹어야 하는 줄 알았지",
+  "I used to think I absolutely had to eat a late-night snack at ten.",
+  "夜10時の夜食は必ず食べなきゃいけないと思ってた。",
+  "我以前以为晚上十点的夜宵是必须吃的。",
+  "我以前以為晚上十點的宵夜是必須吃的。");
+
+T("연습생 때 많이 쪘지",
+  "I gained a lot of weight as a trainee.",
+  "練習生の頃かなり太った。",
+  "当练习生的时候胖了很多。",
+  "當練習生的時候胖了很多。");
+
+T("어렸다",
+  "I was young.",
+  "若かったな。",
+  "那时候真小。",
+  "那時候真小。");
+
+T("내가 고등학교 다닐 때",
+  "When I was in high school...",
+  "高校に通ってたとき…。",
+  "我上高中的时候……",
+  "我上高中的時候……");
+
+T("집에서 운동 맨날 해서",
+  "I worked out at home every day.",
+  "家で毎日運動してたから。",
+  "每天都在家锻炼。",
+  "每天都在家鍛鍊。");
+
+T("턱걸이 20개까지 했었는데",
+  "I could do up to 20 pull-ups.",
+  "懸垂を20回までできたんだけど。",
+  "以前能做20个引体向上。",
+  "以前能做20個引體向上。");
+
+T("운동 한2~3주 하면 적응됨",
+  "You get used to exercise after two or three weeks.",
+  "運動は2〜3週間続ければ慣れる。",
+  "运动两三周就能适应。",
+  "運動兩三週就能適應。");
+
+T("피티 싸악 받고",
+  "Get some personal training.",
+  "パーソナルトレーニングを受けて。",
+  "好好上几节私教课。",
+  "好好上幾節私人教練課。");
+
+T("올해 걷는 거랑 식단으로 10키로 넘게 뺐는데",
+  "I lost over ten kilos this year by walking and dieting.",
+  "今年はウォーキングと食事管理で10キロ以上痩せたけど。",
+  "今年靠走路和控制饮食瘦了十多公斤。",
+  "今年靠走路和控制飲食瘦了十多公斤。");
+
+T("롤드컵때 다 복구됨",
+  "I gained it all back during Worlds.",
+  "世界大会のときに全部戻った。",
+  "世界赛的时候全胖回来了。",
+  "世界賽的時候全胖回來了。");
+
+T("오리고기 샐러드",
+  "Duck salad.",
+  "鴨肉サラダ。",
+  "鸭肉沙拉。",
+  "鴨肉沙拉。");
+
+T("걷는 거 1~2시간 정도?",
+  "About one or two hours of walking?",
+  "ウォーキングは1〜2時間くらい？",
+  "走路一到两个小时左右？",
+  "走路一到兩個小時左右？");
+
+T("근데 지금은 춥자나 다른 방법 없다?",
+  "But it's cold now. Isn't there another way?",
+  "でも今は寒いじゃん。ほかに方法ない？",
+  "但现在很冷啊，没有别的方法吗？",
+  "但現在很冷啊，沒有別的方法嗎？");
+
+T("숨쉬기 봄 준비할게",
+  "Breathing. I'll get ready for spring.",
+  "呼吸。春に備えるよ。",
+  "呼吸吧，我先为春天做准备。",
+  "呼吸吧，我先為春天做準備。");
+
+T("2~3달에 10빠진 것 같은ㄷ",
+  "I think I lost ten kilos in two or three months.",
+  "2〜3か月で10キロ落ちた気がする。",
+  "好像两三个月瘦了十公斤。",
+  "好像兩三個月瘦了十公斤。");
+
+T("거기는 운동을 넘 늦게 해 저녁인데",
+  "They work out way too late there, in the evening.",
+  "あそこは運動する時間が遅すぎる。夜なのに。",
+  "他们锻炼得太晚了，都是晚上。",
+  "他們鍛鍊得太晚了，都是晚上。");
+
+T("저녁운동 안 좋아",
+  "Evening workouts aren't good.",
+  "夜の運動はよくない。",
+  "晚上运动不好。",
+  "晚上運動不好。");
+
+T("노노 왕호형이 저녁 운동",
+  "No, no. Wang-ho said evening exercise...",
+  "いやいや、ワンホ兄さんが夜の運動は…。",
+  "不不，王浩哥说晚上运动……",
+  "不不，王浩哥說晚上運動……");
+
+T("안좋다함",
+  "He said it's not good.",
+  "よくないって言ってた。",
+  "他说不好。",
+  "他說不好。");
+
+T("낮에 하라고 했어",
+  "He said to do it during the day.",
+  "昼にやれって言ってた。",
+  "他说白天做。",
+  "他說白天做。");
+
+T("왕호형 꾸준한 운동러야",
+  "Wang-ho works out consistently.",
+  "ワンホ兄さんはずっと運動してる。",
+  "王浩哥一直坚持锻炼。",
+  "王浩哥一直堅持鍛鍊。");
+
+T("제카는 컨셉이야",
+  "Zeka's just putting on an act.",
+  "ゼカはキャラ作りだよ。",
+  "Zeka只是人设。",
+  "Zeka只是人設。");
+
+T("상체충",
+  "An upper-body-only gym guy.",
+  "上半身ばっか鍛えるタイプ。",
+  "只练上半身的人。",
+  "只練上半身的人。");
+
+T("이게 상체만 하는 애들이 꽤 많아",
+  "There are quite a few guys who only train their upper bodies.",
+  "上半身だけ鍛える人って結構多い。",
+  "只练上半身的人还挺多。",
+  "只練上半身的人還挺多。");
+
+T("주변에",
+  "Around me.",
+  "周りに。",
+  "我身边就有。",
+  "我身邊就有。");
+
+T("근데 새벽에 하디 갔다던데",
+  "But I heard they went to the gym late at night.",
+  "でも明け方にジムへ行ったらしいね。",
+  "不过听说他们凌晨去了健身房。",
+  "不過聽說他們凌晨去了健身房。");
+
+T("진혁이형이 건우가 가자고",
+  "Jin-hyeok said Geon-woo asked him to go.",
+  "ジンヒョク兄さんがゴヌに誘われたって。",
+  "镇赫哥说是建佑叫他一起去的。",
+  "鎮赫哥說是建佑叫他一起去的。");
+
+T("말해서 갔다는데",
+  "So he went.",
+  "言われて行ったらしい。",
+  "所以就去了。",
+  "所以就去了。");
+
+T("예스형 속 터질듯",
+  "Yes-hyung must be losing his mind.",
+  "イェス兄さん、頭抱えてそう。",
+  "Yes哥估计要崩溃了。",
+  "Yes哥估計要崩潰了。");
+
+T("아 같이 가셨어?",
+  "Oh, did you go together?",
+  "あ、一緒に行ったんですか？",
+  "啊，你们一起去了吗？",
+  "啊，你們一起去了嗎？");
+
+T("근데 예스형은 매일 운동 하시잖아",
+  "But Yes-hyung works out every day.",
+  "でもイェス兄さんは毎日運動してるじゃん。",
+  "不过Yes哥每天都锻炼啊。",
+  "不過Yes哥每天都鍛鍊啊。");
+
+T("무죄야",
+  "Not guilty.",
+  "無罪だ。",
+  "无罪。",
+  "無罪。");
+
+T("잘 자라 내일 출근하면 주말이야",
+  "Sleep well. Once you go to work tomorrow, it's the weekend.",
+  "おやすみ。明日出勤すれば週末だよ。",
+  "晚安，明天上完班就是周末了。",
+  "晚安，明天上完班就是週末了。");
+
+/* ========================================
+   12월 19일 번역
+======================================== */
+
+T("개운하네",
+  "I feel refreshed.",
+  "すっきりした。",
+  "真清爽。",
+  "真清爽。");
+
+T("9출 6퇴반 슬슬 준비하자",
+  "Time to start getting ready for nine-to-six work.",
+  "9時出勤6時退勤の準備をそろそろしよう。",
+  "该慢慢准备朝九晚六了。",
+  "該慢慢準備朝九晚六了。");
+
+T("카톡 롤백 진짜 좋고만",
+  "The KakaoTalk rollback is really nice.",
+  "カカオトークのロールバック、いいね。",
+  "KakaoTalk回滚真不错。",
+  "KakaoTalk回滾真不錯。");
+
+T("자동으로 당했는데",
+  "It happened to me automatically.",
+  "自動でやられたんだけど。",
+  "我是被自动更新的。",
+  "我是被自動更新的。");
+
+T("업데이트",
+  "The update.",
+  "アップデート。",
+  "更新。",
+  "更新。");
+
+T("친구 업뎃 눌리고 있었는데",
+  "I was looking at the friends update.",
+  "友達の更新を見てたんだけど。",
+  "我正看着好友更新呢。",
+  "我正看著好友更新呢。");
+
+T("우리 집이 불 났지 뭐야",
+  "My house was practically on fire.",
+  "うちが大騒ぎになったんだよ。",
+  "我家简直闹翻了。",
+  "我家簡直鬧翻了。");
+
+T("다시 돌아왔으니 봐준다",
+  "It's back now, so I'll let it slide.",
+  "元に戻ったから許してやる。",
+  "既然恢复了就放过它。",
+  "既然恢復了就放過它。");
+
+T("올해 면허 따 본 사람",
+  "Anyone get their driver's license this year?",
+  "今年免許取った人いる？",
+  "今年有人考驾照了吗？",
+  "今年有人考駕照了嗎？");
+
+T("쉽나",
+  "Is it easy?",
+  "簡単？",
+  "容易吗？",
+  "容易嗎？");
+
+T("1주 다니면 따나?",
+  "Can you get it in a week?",
+  "1週間通えば取れる？",
+  "学一周能考下来吗？",
+  "學一週能考下來嗎？");
+
+T("10년전은 안될까",
+  "Would one from ten years ago count?",
+  "10年前のはダメかな？",
+  "十年前的不行吗？",
+  "十年前的不行嗎？");
+
+T("재발급 안하나요",
+  "Can't you get it reissued?",
+  "再発行しないんですか？",
+  "不能补办吗？",
+  "不能補辦嗎？");
+
+T("한 4년 전 꿈에서 운전했을 때 진짜 실감 나게 잘 했는데",
+  "About four years ago I drove really well in a very realistic dream.",
+  "4年くらい前、夢で運転したときはすごくリアルで上手だったのに。",
+  "大约四年前梦里开车时，感觉特别真实，开得也很好。",
+  "大約四年前夢裡開車時，感覺特別真實，開得也很好。");
+
+T("곧 반오십인데 면허 준비해야지",
+  "I'm almost twenty-five; I should get ready for my license.",
+  "もうすぐ25歳だし免許の準備しないと。",
+  "快二十五岁了，该准备考驾照了。",
+  "快二十五歲了，該準備考駕照了。");
+
+T("1종 따는 게 더 효율 좋잖아",
+  "Getting a Class 1 license is more useful, right?",
+  "1種免許のほうが効率いいでしょ。",
+  "考一类驾照更划算吧。",
+  "考一類駕照更划算吧。");
+
+T("2종 2주컷 가봐야지",
+  "I'll try to get a Class 2 license in two weeks.",
+  "2種免許を2週間で取ってみよう。",
+  "试试两周拿下二类驾照。",
+  "試試兩週拿下二類駕照。");
+
+T("차 몰라",
+  "I don't know cars.",
+  "車はよく分からない。",
+  "我不懂车。",
+  "我不懂車。");
+
+T("굴러가기만 하면 돼",
+  "As long as it runs, that's enough.",
+  "走りさえすればいい。",
+  "能开就行。",
+  "能開就行。");
+
+T("면허는 여유 있으면 따 놓고",
+  "Get a license when you have time.",
+  "免許は余裕があるときに取っておいて。",
+  "有空就先把驾照考了。",
+  "有空就先把駕照考了。");
+
+T("일산은 자전거를 타야",
+  "In Ilsan, you should ride a bicycle.",
+  "一山では自転車に乗るべき。",
+  "在一山还是要骑自行车。",
+  "在一山還是要騎自行車。");
+
+T("좋음",
+  "That's good.",
+  "いいね。",
+  "不错。",
+  "不錯。");
+
+T("집 갈때마다",
+  "Every time I go home...",
+  "家に帰るたびに。",
+  "每次回家的时候……",
+  "每次回家的時候……");
+
+T("내가 운전하면",
+  "If I drive...",
+  "俺が運転すれば。",
+  "如果我开车……",
+  "如果我開車……");
+
+T("ㄱㅊ지",
+  "That'd be fine.",
+  "大丈夫でしょ。",
+  "那就没问题了。",
+  "那就沒問題了。");
+
+T("자전거 잘타?",
+  "Are you good at riding a bike?",
+  "自転車乗るの上手？",
+  "你自行车骑得好吗？",
+  "你自行車騎得好嗎？");
+
+T("고수야",
+  "I'm an expert.",
+  "得意だよ。",
+  "我是高手。",
+  "我是高手。");
+
+T("강아지는 덩치 더 큰 애가 소금이고 작은 애가 봄이요",
+  "The bigger dog is Sogeum and the smaller one is Bom.",
+  "大きいほうの犬がソグム、小さいほうがボムだよ。",
+  "体型大的是Sogeum，小的是Bom。",
+  "體型大的是Sogeum，小的是Bom。");
+
+/* ========================================
+   12월 20일 번역
+======================================== */
+
+T("누가 큰거고 작은거야",
+  "Which one is bigger and which one is smaller?",
+  "どっちが大きくて、どっちが小さいの？",
+  "哪只是大的，哪只是小的？",
+  "哪隻是大的，哪隻是小的？");
+
+T("왼쪽이 큰",
+  "The one on the left is bigger.",
+  "左のほうが大きい。",
+  "左边那只是大的。",
+  "左邊那隻是大的。");
+
+T("보통 연관성 있게 이름 비슷하게 짓지않아!?",
+  "Don't people usually give them similar or related names!?",
+  "普通は関連性のある似た名前を付けない！？",
+  "一般不是会取有关联、相似的名字吗！？",
+  "一般不是會取有關聯、相似的名字嗎！？");
+
+T("내가 안해서 모르겠어유",
+  "I didn't name them, so I don't know.",
+  "俺が名付けたわけじゃないから分からないよ。",
+  "不是我取的名字，所以我也不知道。",
+  "不是我取的名字，所以我也不知道。");
+
+T("모닝",
+  "Morning.",
+  "おはよう。",
+  "早上好。",
+  "早安。");
+
+T("비 오던데",
+  "It was raining.",
+  "雨降ってたけど。",
+  "刚才还在下雨呢。",
+  "剛才還在下雨呢。");
+
+T("밥 먹자 😛",
+  "Let's eat 😛",
+  "ご飯食べよう 😛",
+  "吃饭吧 😛",
+  "吃飯吧 😛");
+
+T("나중에 은퇴하면 대형견 키워보고 싶다",
+  "I'd like to raise a large dog after I retire.",
+  "いつか引退したら大型犬を飼ってみたい。",
+  "以后退役了想养一只大型犬。",
+  "以後退役了想養一隻大型犬。");
+
+T("제육 먹어요 젤 좋음",
+  "I'm eating spicy stir-fried pork. It's my favorite.",
+  "豚肉の辛炒めを食べるよ。一番好き。",
+  "吃辣炒猪肉，最喜欢这个了。",
+  "吃辣炒豬肉，最喜歡這個了。");
+
+T("리트리버",
+  "Retriever.",
+  "レトリバー。",
+  "寻回犬。",
+  "尋回犬。");
+
+T("yes",
+  "Yes.",
+  "うん。",
+  "对。",
+  "對。");
+
+T("근데 털 빠지는 거 보니",
+  "But seeing how much they shed...",
+  "でも抜け毛の多さを見ると…。",
+  "不过看它们掉毛的程度……",
+  "不過看牠們掉毛的程度……");
+
+T("각 잡고 키워야 해",
+  "I'd have to be fully prepared to raise one.",
+  "ちゃんと覚悟して飼わないと。",
+  "真要养的话得做好充分准备。",
+  "真要養的話得做好充分準備。");
+
+T("환중아 고생이 많다",
+  "Hwan-jung, you've been working so hard.",
+  "ファンジュン、お疲れさま。",
+  "焕中啊，辛苦你了。",
+  "煥中啊，辛苦你了。");
+
+T("감사합니다 땡큐 :)",
+  "Thank you, thank you :)",
+  "ありがとうございます、サンキュー :)",
+  "谢谢，谢谢 :)",
+  "謝謝，謝謝 :)");
+
+/* ==========================================
+   화면 기능
+========================================== */
+
+const $ = id => document.getElementById(id);
+
+const chat = $("chat");
+const list = $("messageList");
+const menu = $("langMenu");
+const cal = $("calendar");
+const overlay = $("overlay");
+
+let language = "original";
+let month = new Date(2025, 11, 1);
+
+/* 인증 배지 */
+
+const badgeSVG = `
+<svg viewBox="0 0 24 24">
+  <path
+    d="M12 1.8C13.4 1.8 14.1 3 15.2 3.4C16.4 3.9 18 3.4 18.9 4.3C19.8 5.2 19.3 6.7 19.7 7.9C20.1 9 21.4 9.7 21.4 11.1C21.4 12.5 20.1 13.3 19.7 14.4C19.3 15.6 19.8 17.1 18.9 18C18 18.9 16.4 18.4 15.2 18.9C14.1 19.3 13.4 20.5 12 20.5C10.6 20.5 9.9 19.3 8.8 18.9C7.6 18.4 6 18.9 5.1 18C4.2 17.1 4.7 15.6 4.3 14.4C3.9 13.3 2.6 12.5 2.6 11.1C2.6 9.7 3.9 9 4.3 7.9C4.7 6.7 4.2 5.2 5.1 4.3C6 3.4 7.6 3.9 8.8 3.4C9.9 3 10.6 1.8 12 1.8Z"
+    fill="#e7eff7"/>
+  <path
+    d="M8.1 11.3L10.7 13.8L16 8.7"
+    stroke="#739bc9"
+    stroke-width="2"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+</svg>`;
+
+/* 요소 생성 */
+
+function el(tag, className, text) {
+  const element = document.createElement(tag);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (text !== undefined) {
+    element.textContent = text;
+  }
+
+  return element;
+}
+
+/* 날짜 */
+
+function fullDateLabel(dateString) {
+  const [year, monthNumber, day] =
+    dateString.split("-").map(Number);
+
+  const date = new Date(year, monthNumber - 1, day);
+
+  const weekdays = [
+    "일", "월", "화", "수", "목", "금", "토"
+  ];
+
+  return (
+    year + "년 " +
+    monthNumber + "월 " +
+    day + "일 " +
+    weekdays[date.getDay()] + "요일"
+  );
+}
+
+/* 시간 */
+
+function timeLabel(time) {
+  const [hour, minute] = time.split(":").map(Number);
+
+  return (
+    (hour < 12 ? "오전" : "오후") +
+    " " +
+    (hour % 12 || 12) +
+    ":" +
+    String(minute).padStart(2, "0")
+  );
+}
+
+/* 함께한 지 N일 */
+
+function updateDays() {
+  const now = new Date();
+
+  const start = Date.UTC(2025, 11, 17);
+
+  const today = Date.UTC(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
+
+  const days = Math.max(
+    0,
+    Math.round((today - start) / 86400000) + 1
+  );
+
+  $("days").textContent = "함께한 지 " + days + "일";
+}
+
+/* 닉네임 */
+
+function updateNickname() {
+  const name = (
+    localStorage.getItem("delightNickname") || "방문자"
+  ).trim();
+
+  const displayName = name.endsWith("님")
+    ? name
+    : name + "님";
+
+  $("welcome").textContent =
+    displayName + " 환영해요!";
+}
+
+/* 번역 요소 */
+
+function translatedPart(text) {
+  const div = el("div", "translation");
+
+  /* 화면에서 강제 줄바꿈된 원문도 번역 검색 가능 */
+  div.dataset.translate = text.replace(/\n/g, "");
+
+  return div;
+}
+
+/* 일반 말풍선 */
+
+function makeText(text, id) {
+  const bubble = el("div", "bubble");
+
+  bubble.id = id;
+
+  bubble.append(
+    el("div", "original", text),
+    translatedPart(text)
+  );
+
+  return bubble;
+}
+
+/* 답장 말풍선 */
+
+function makeReply(item, id) {
+  const reply = el("div", "reply");
+
+  reply.id = id;
+
+  const main = el("div", "reply-main");
+  const content = el("div", "reply-answer-content");
+  const arrow = el("span", "reply-arrow");
+
+  arrow.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none">
+      <path
+        d="M5 3V12C5 15 7 17 10 17H19M15 13L19 17L15 21"
+        stroke="currentColor"
+        stroke-width="2.1"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+  `;
+
+  content.append(
+    el("div", "reply-answer", item.text),
+    translatedPart(item.text)
+  );
+
+  main.append(arrow, content);
+
+  reply.append(
+    el("div", "reply-heading", "Delight님의 답장"),
+    el("div", "reply-quote", item.quoted),
+    translatedPart(item.quoted),
+    main
+  );
+
+  return reply;
+}
+
+/* 사진 */
+
+function makeImage(item) {
+  const img = el("img", "message-photo");
+
+  img.src = item.src;
+  img.alt = "POP 사진";
+  img.loading = "lazy";
+
+  img.onclick = () => openImage(item.src);
+
+  /* 없는 파일은 회색 오류 박스 없이 숨김 */
+  img.onerror = () => img.remove();
+
+  return img;
+}
+
+/* 전체 메시지 렌더링 */
+
+function render() {
+  list.replaceChildren();
+
+  recordsByDate.forEach(day => {
+    const dateLabel = el(
+      "div",
+      "day-label",
+      fullDateLabel(day.date)
+    );
+
+    dateLabel.id = "date-" + day.date;
+
+    list.append(dateLabel);
+
+    day.messages.forEach(([time, items], index) => {
+      const row = el("div", "message");
+      const profile = el("img", "profile");
+      const body = el("div", "message-content");
+      const meta = el("div", "meta");
+      const badge = el("span", "badge");
+
+      profile.src = "images/profile.jpg";
+      profile.alt = "Delight";
+
+      badge.innerHTML = badgeSVG;
+
+      meta.append(
+        el("span", "sender", "Delight"),
+        badge,
+        el("span", "time", timeLabel(time))
+      );
+
+      body.append(meta);
+
+      items.forEach((item, itemIndex) => {
+        const id =
+          "msg-" + day.date + "-" + index + "-" + itemIndex;
+
+        if (typeof item === "string") {
+          body.append(makeText(item, id));
+
+        } else if (item.type === "reply") {
+          body.append(makeReply(item, id));
+
+        } else if (item.type === "image") {
+          body.append(makeImage(item));
+        }
+      });
+
+      row.append(profile, body);
+      list.append(row);
+    });
+  });
+
+  applyLanguage(language);
+}
+
+/* 즉시 번역 */
+
+function applyLanguage(lang) {
+  language = lang;
+
+  menu.classList.remove("open");
+
+  document.querySelectorAll(
+    ".lang-menu button"
+  ).forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.lang === lang
+    );
+  });
+
+  document.querySelectorAll(
+    "[data-translate]"
+  ).forEach(target => {
+    const original = target.dataset.translate;
+
+    const result = lang === "original"
+      ? ""
+      : (translations[original]?.[lang] || "");
+
+    target.textContent = result;
+
+    target.classList.toggle(
+      "show",
+      lang !== "original" && !!result
+    );
+  });
+}
+
+/* 설정창 */
+
+function openSheet(title, html) {
+  cal.classList.remove("open");
+  menu.classList.remove("open");
+
+  $("sheetTitle").textContent = title;
+  $("sheetContent").innerHTML = html;
+
+  overlay.classList.add("open");
+}
+
+function closeSheet() {
+  overlay.classList.remove("open");
+}
+
+/* 사진 자동 수집 */
+
+function photoList() {
+  const photos = [];
+
+  recordsByDate.forEach(day => {
+    day.messages.forEach(([time, items]) => {
+      items.forEach(item => {
+        if (
+          item &&
+          typeof item === "object" &&
+          item.type === "image"
+        ) {
+          photos.push({
+            date: day.date,
+            time,
+            src: item.src
+          });
+        }
+      });
+    });
+  });
+
+  return photos;
+}
+
+/* 사진 확대 */
+
+function openImage(src) {
+  $("viewerImage").src = src;
+  $("viewer").classList.add("open");
+}
+
+/* 썸네일 */
+
+function thumbnail(place, item) {
+  const img = el("img");
+
+  img.src = item.src;
+  img.alt = "POP 사진";
+  img.loading = "lazy";
+
+  img.onclick = () => openImage(item.src);
+  img.onerror = () => img.remove();
+
+  place.append(img);
+}
+
+/* 설정 화면 */
+
+function openSettings() {
+  openSheet("설정", `
+    <div class="media-head">
+      <span>사진 · 동영상</span>
+      <button id="allPhotos">전체보기</button>
+    </div>
+
+    <div id="preview" class="preview"></div>
+
+    <button id="nicknameBtn" class="setting-row">
+      닉네임 변경
+    </button>
+  `);
+
+  photoList().slice(-4).reverse().forEach(item => {
+    thumbnail($("preview"), item);
+  });
+
+  $("allPhotos").onclick = openGallery;
+
+  $("nicknameBtn").onclick = () => {
+    openNickname(false);
+  };
+}
+
+/* 전체 사진 */
+
+function openGallery() {
+  openSheet("사진 · 동영상", `
+    <div id="gallery" class="gallery"></div>
+
+    <button id="backSettings" class="primary">
+      설정으로 돌아가기
+    </button>
+  `);
+
+  photoList().forEach(item => {
+    thumbnail($("gallery"), item);
+  });
+
+  $("backSettings").onclick = openSettings;
+}
+
+/* 닉네임 설정 */
+
+function openNickname(first = false) {
+  openSheet(
+    first ? "닉네임 설정" : "닉네임 변경",
+    `
+      <p class="note">
+        POP에서 사용하실 닉네임을 입력해 주세요.
+      </p>
+
+      <input
+        id="nicknameInput"
+        class="field"
+        maxlength="20"
+        placeholder="닉네임 입력">
+
+      <button id="saveName" class="primary">
+        저장하기
+      </button>
+    `
+  );
+
+  const input = $("nicknameInput");
+
+  input.value =
+    localStorage.getItem("delightNickname") || "";
+
+  const save = () => {
+    const name = input.value.trim();
+
+    if (!name) {
+      alert("닉네임을 입력해 주세요.");
+      return;
+    }
+
+    localStorage.setItem("delightNickname", name);
+
+    updateNickname();
+    closeSheet();
+  };
+
+  $("saveName").onclick = save;
+
+  input.onkeydown = event => {
+    if (event.key === "Enter") {
+      save();
+    }
+  };
+}
+
+/* 메시지 검색 */
+
+function openSearch() {
+  openSheet("대화 검색", `
+    <input
+      id="searchInput"
+      class="field"
+      placeholder="검색할 단어를 입력하세요">
+
+    <p id="searchCount" class="note"></p>
+
+    <div id="searchResults"></div>
+  `);
+
+  $("searchInput").oninput = () => {
+    const query = $("searchInput")
+      .value.trim()
+      .toLocaleLowerCase();
+
+    const results = $("searchResults");
+
+    results.replaceChildren();
+
+    if (!query) {
+      $("searchCount").textContent = "";
+      return;
+    }
+
+    const matches = [];
+
+    recordsByDate.forEach(day => {
+      day.messages.forEach(([time, items], i) => {
+        items.forEach((item, j) => {
+          let text = "";
+
+          if (typeof item === "string") {
+            text = item;
+
+          } else if (item.type === "reply") {
+            text = item.quoted + " " + item.text;
+          }
+
+          if (
+            text.toLocaleLowerCase().includes(query)
+          ) {
+            matches.push({
+              date: day.date,
+              time,
+              text,
+              id: `msg-${day.date}-${i}-${j}`
+            });
+          }
+        });
+      });
+    });
+
+    $("searchCount").textContent =
+      matches.length + "건";
+
+    matches.reverse().forEach(hit => {
+      const button = el("button", "search-result");
+
+      button.append(
+        el(
+          "div",
+          "search-date",
+          fullDateLabel(hit.date) + " " + timeLabel(hit.time)
+        ),
+        el("div", "search-text", hit.text)
+      );
+
+      button.onclick = () => {
+        closeSheet();
+
+        const target = $(hit.id);
+
+        if (!target) return;
+
+        const top =
+          target.getBoundingClientRect().top -
+          chat.getBoundingClientRect().top +
+          chat.scrollTop - 65;
+
+        chat.scrollTo({
+          top,
+          behavior: "smooth"
+        });
+
+        target.classList.remove("highlight");
+
+        void target.offsetWidth;
+
+        target.classList.add("highlight");
+      };
+
+      results.append(button);
+    });
+  };
+}
+
+/* 달력 */
+
+function drawCalendar() {
+  const year = month.getFullYear();
+  const monthNumber = month.getMonth();
+
+  const grid = $("calendarGrid");
+
+  $("calendarTitle").textContent =
+    year + "년 " + (monthNumber + 1) + "월";
+
+  grid.replaceChildren();
+
+  const weekdays = [
+    "일", "월", "화", "수", "목", "금", "토"
+  ];
+
+  weekdays.forEach(day => {
+    grid.append(el("div", "weekday", day));
+  });
+
+  const firstDay =
+    new Date(year, monthNumber, 1).getDay();
+
+  for (let i = 0; i < firstDay; i++) {
+    grid.append(el("div"));
+  }
+
+  const activeDates = new Set(
+    recordsByDate.map(day => day.date)
+  );
+
+  const totalDays =
+    new Date(year, monthNumber + 1, 0).getDate();
+
+  for (let day = 1; day <= totalDays; day++) {
+    const button = el("button", "day", String(day));
+
+    const dateString =
+      year + "-" +
+      String(monthNumber + 1).padStart(2, "0") + "-" +
+      String(day).padStart(2, "0");
+
+    if (activeDates.has(dateString)) {
+      button.classList.add("has");
+    }
+
+    button.onclick = () => {
+      cal.classList.remove("open");
+
+      if (activeDates.has(dateString)) {
+        const target = $("date-" + dateString);
+
+        if (target) {
+          const top =
+            target.getBoundingClientRect().top -
+            chat.getBoundingClientRect().top +
+            chat.scrollTop - 16;
+
+          chat.scrollTo({
+            top,
+            behavior: "smooth"
+          });
+        }
+
+      } else {
+        alert("해당 날짜에 등록된 메시지가 없습니다.");
+      }
+    };
+
+    grid.append(button);
+  }
+}
+
+/* 버튼 연결 */
+
+$("settingsBtn").onclick = openSettings;
+
+$("searchBtn").onclick = openSearch;
+
+$("translateBtn").onclick = () => {
+  cal.classList.remove("open");
+  menu.classList.toggle("open");
+};
+
+document.querySelectorAll(
+  ".lang-menu button"
+).forEach(button => {
+  button.onclick = () => {
+    applyLanguage(button.dataset.lang);
+  };
+});
+
+$("calendarBtn").onclick = () => {
+  menu.classList.remove("open");
+  cal.classList.toggle("open");
+  drawCalendar();
+};
+
+$("prevMonth").onclick = () => {
+  month = new Date(
+    month.getFullYear(),
+    month.getMonth() - 1,
+    1
+  );
+
+  drawCalendar();
+};
+
+$("nextMonth").onclick = () => {
+  month = new Date(
+    month.getFullYear(),
+    month.getMonth() + 1,
+    1
+  );
+
+  drawCalendar();
+};
+
+$("latestBtn").onclick = () => {
+  cal.classList.remove("open");
+
+  chat.scrollTo({
+    top: chat.scrollHeight,
+    behavior: "smooth"
+  });
+};
+
+$("closeSheet").onclick = closeSheet;
+
+overlay.onclick = event => {
+  if (event.target === overlay) {
+    closeSheet();
+  }
+};
+
+$("closeViewer").onclick = () => {
+  $("viewer").classList.remove("open");
+};
+
+document.addEventListener("click", event => {
+  if (
+    !event.target.closest("#translateBtn") &&
+    !event.target.closest("#langMenu")
+  ) {
+    menu.classList.remove("open");
+  }
+
+  if (
+    !event.target.closest("#calendarBtn") &&
+    !event.target.closest("#calendar")
+  ) {
+    cal.classList.remove("open");
+  }
+});
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+    if (!document.hidden) {
+      updateDays();
+    }
+  }
+);
+
+/* 시작 */
+
+updateDays();
+updateNickname();
+render();
+drawCalendar();
+
+if (!localStorage.getItem("delightNickname")) {
+  openNickname(true);
+}
+
+setInterval(updateDays, 60000);
+
+</script>
+</body>
+</html>
