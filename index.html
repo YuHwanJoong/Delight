@@ -135,13 +135,13 @@ button {
 .icon-btn svg {
   width: 21px;
   height: 21px;
-
   fill: none;
   stroke: currentColor;
   stroke-width: 1.85;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
 
 /* ========================================
    채팅 스크롤 영역
@@ -398,18 +398,19 @@ button {
 
 /* 답장 인용문 */
 
+
 .reply-quote {
   margin-top: 4px;
-
   color: #a0a0a0;
   font-size: 11px;
   font-weight: 400;
   line-height: 1.45;
 
   white-space: pre-wrap;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
 }
+
 
 /* 답장 내용 + 화살표 */
 
@@ -957,12 +958,30 @@ button {
     <path d="M7 2v6M17 2v6M3 10h18"/>
   </symbol>
 
-  <symbol id="i-lang" viewBox="0 0 24 24">
-    <rect x="2" y="3" width="13" height="13" rx="2"/>
-    <path d="M5 12L9 5L13 12M6.5 9h5"/>
-    <rect x="10" y="10" width="12" height="12" rx="2"/>
-    <path d="M13 14h6M16 12v2M13 14c1 3 3 5 6 6"/>
-  </symbol>
+
+
+<symbol id="i-lang" viewBox="0 0 24 24">
+  <g transform="translate(-1.5 -1.5) scale(1.13)">
+    <!-- 뒤쪽 A 네모 -->
+    <rect x="2.5" y="2.5" width="13" height="13"
+          rx="2.2" fill="none" />
+    <path d="M5.5 12L9 5.5L12.5 12
+             M6.8 9.5H11.2"
+          fill="none" />
+
+    <!-- 앞쪽 번역 네모 -->
+    <rect x="10" y="10" width="11.5" height="11.5"
+          rx="2.2" fill="none" />
+    <path d="M12.5 14H19
+             M15.8 12.5V14
+             M13.2 14.5C14.2 17 16 18.8 18.8 19.5
+             M18.5 14.5C17.5 17 15.5 18.5 13.5 19.5"
+          fill="none" />
+  </g>
+</symbol>
+
+
+
 </svg>
 
 <div class="app">
@@ -1430,7 +1449,7 @@ const recordsByDate = [
       ["14:16", [
         {
           type: "reply",
-          quoted: "책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어봐",
+          quoted: "책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어\n봐",
           text: "내가 초6 때까지 독서왕이었는데"
         },
         "중1 때 롤 해서 공부 버림"
@@ -3766,6 +3785,175 @@ document.addEventListener(
     }
   }
 );
+/* ==========================================
+   POP 원본 줄바꿈 보정
+   2025년 12월 17일 ~ 20일
+
+   기존 메시지와 번역 데이터 유지
+========================================== */
+
+function fixOriginalLineBreaks() {
+
+  /* 날짜와 시간을 기준으로 메시지 찾기 */
+
+  function findMessages(date, time) {
+    const day = recordsByDate.find(
+      record => record.date === date
+    );
+
+    if (!day) return null;
+
+    const message = day.messages.find(
+      record => record[0] === time
+    );
+
+    return message ? message[1] : null;
+  }
+
+  /* 일반 말풍선 줄바꿈 */
+
+  function fixText(date, time, original, corrected) {
+    const items = findMessages(date, time);
+
+    if (!items) return;
+
+    const index = items.findIndex(
+      item =>
+        typeof item === "string" &&
+        item.replace(/\n/g, "") === original
+    );
+
+    if (index !== -1) {
+      items[index] = corrected;
+    }
+  }
+
+  /* 답장 인용문 줄바꿈 */
+
+  function fixReply(date, time, original, corrected) {
+    const items = findMessages(date, time);
+
+    if (!items) return;
+
+    const reply = items.find(
+      item =>
+        item &&
+        typeof item === "object" &&
+        item.type === "reply" &&
+        item.quoted.replace(/\n/g, "") === original
+    );
+
+    if (reply) {
+      reply.quoted = corrected;
+    }
+  }
+
+  /* ========================================
+     12월 17일
+  ======================================== */
+
+  /* 오후 3:23 */
+
+  fixText(
+    "2025-12-17",
+    "15:23",
+    "말은 알아서들 하고 메뉴도 알아서들 먹죠 추천대로 안 먹잖슴",
+    "말은 알아서들 하고 메뉴도 알아서들 먹죠 추천대\n로 안 먹잖슴"
+  );
+
+  /* 오후 9:18 */
+
+  fixReply(
+    "2025-12-17",
+    "21:18",
+    "그거 결국 건우처럼 사람 진짜 팔것같이 생긴애들 나왔지만 건우처럼 알고보면 착한애들만 나옴",
+    "그거 결국 건우처럼 사람 진짜 팔것같이 생긴애들 나왔지만 건우처럼 알고보면 \n착한애들만 나옴"
+  );
+
+  /* ========================================
+     12월 18일
+  ======================================== */
+
+  /* 오후 2:05 */
+
+  fixText(
+    "2025-12-18",
+    "14:05",
+    "나는 사람은 보상 심리가 있어서 꼭 유튜브 보거나 웹툰 봐야해",
+    "나는 사람은 보상 심리가 있어서 꼭 유튜브 보거\n나 웹툰 봐야해"
+  );
+
+  /* 오후 2:16 */
+
+  fixReply(
+    "2025-12-18",
+    "14:16",
+    "책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어봐",
+    "책은 안 읽어? 그런 꿈 이야기 재밌는거 달러구트 꿈 백화점 읽어\n봐"
+  );
+
+  /* 오후 2:48 */
+
+  fixText(
+    "2025-12-18",
+    "14:48",
+    "난 10시에 먹는 야식 무조건 먹어야 하는 줄 알았지",
+    "난 10시에 먹는 야식 무조건 먹어야 하는 줄 알았\n지"
+  );
+
+  /* ========================================
+     12월 19일
+  ======================================== */
+
+  /* 오후 7:42 */
+
+  fixText(
+    "2025-12-19",
+    "19:42",
+    "한 4년 전 꿈에서 운전했을 때 진짜 실감 나게 잘 했는데",
+    "한 4년 전 꿈에서 운전했을 때 진짜 실감 나게 잘\n했는데"
+  );
+
+  /* 오후 7:50 */
+
+  fixText(
+    "2025-12-19",
+    "19:50",
+    "강아지는 덩치 더 큰 애가 소금이고 작은 애가 봄이요",
+    "강아지는 덩치 더 큰 애가 소금이고 작은 애가 봄\n이요"
+  );
+
+}
+
+/* 줄바꿈 수정 실행 */
+
+fixOriginalLineBreaks();
+
+/* ==========================================
+   답장 및 일반 말풍선 줄바꿈 스타일 보정
+========================================== */
+
+const popLineBreakStyle = document.createElement("style");
+
+popLineBreakStyle.textContent = `
+  .original,
+  .reply-quote,
+  .reply-answer {
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  .reply {
+    max-width: 100%;
+  }
+
+  .reply-quote {
+    line-height: 1.45;
+  }
+`;
+
+document.head.appendChild(popLineBreakStyle);
 
 /* 시작 */
 
