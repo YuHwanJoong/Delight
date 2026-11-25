@@ -935,6 +935,100 @@ button {
   }
 }
 
+
+/* ========================================
+   모바일 화면 크기 조정
+   PC 화면은 기존 설정 유지
+======================================== */
+
+@media (max-width: 600px) {
+
+  /* 상단 */
+  .header {
+    height: 54px;
+  }
+
+  .header-title {
+    font-size: 15px;
+  }
+
+  .header-days {
+    font-size: 10px;
+  }
+
+  /* 채팅 영역 */
+  .chat {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* 프로필 */
+  .message {
+    gap: 8px;
+    margin-bottom: 19px;
+  }
+
+  .profile {
+    width: 35px;
+    height: 35px;
+    flex-basis: 35px;
+  }
+
+  /* Delight 이름과 시간 */
+  .sender {
+    font-size: 13px;
+  }
+
+  .time {
+    font-size: 10px;
+  }
+
+  .badge,
+  .badge svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 일반 말풍선 */
+  .bubble {
+    font-size: 13px;
+    padding: 10px 13px;
+    border-radius: 21px;
+    line-height: 1.5;
+  }
+
+  /* 답장 말풍선 */
+  .reply {
+    padding: 11px 14px 12px;
+    border-radius: 24px;
+  }
+
+  .reply-heading {
+    font-size: 11px;
+  }
+
+  .reply-quote {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .reply-answer {
+    font-size: 13px;
+  }
+
+  .reply-main {
+    margin-top: 9px;
+  }
+
+  /* 날짜 표시 */
+  .day-label {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+
+}
+
+   
 </style>
 
 
