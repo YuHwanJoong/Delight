@@ -8,9 +8,10 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css">
 
+
+
 <style>
 
-  
 * {
   box-sizing: border-box;
 }
@@ -46,7 +47,7 @@ button {
   height: 100dvh;
   margin: auto;
   overflow: hidden;
-  background: #83acd9 url("background.jpg") center / cover no-repeat;
+  background: #83acd9 url("images/background.jpg") center / cover no-repeat;
 }
 
 /* 상단 */
@@ -257,13 +258,15 @@ button {
 /* 답장 말풍선 */
 
 
+
+
 .reply {
   display: table;
   width: fit-content;
-  max-width: 100%;
+  max-width: min(100%, 300px);
 
   margin: 0 0 8px;
-  padding: 17px 20px 19px;
+  padding: 14px 17px;
 
   border: 0;
   border-radius: 27px;
@@ -275,28 +278,22 @@ button {
   overflow-wrap: break-word;
 }
 
-.reply-heading {
-  margin: 0;
-  color: #343434;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
 .reply-quote {
-  margin-top: 6px;
+  margin-top: 5px;
   color: #a0a0a0;
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.5;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .reply-main {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 9px;
+  margin-top: 12px;
 }
+
 
 
 .reply-arrow {
@@ -673,7 +670,7 @@ button {
   }
 }
 
-  @media (max-width: 480px) {
+@media (max-width: 480px) {
   .header { height: 56px; }
   .chat { padding: 12px 10px calc(24px + env(safe-area-inset-bottom)); }
   .message { gap: 8px; margin-bottom: 16px; }
@@ -684,6 +681,9 @@ button {
   .bubble, .reply-answer { font-size: 14px; line-height: 1.45; }
   .message-photo { max-width: min(100%, 240px); max-height: 300px; }
 }
+
+
+
 </style>
 </head>
 
@@ -923,7 +923,7 @@ const recordsByDate = [
       ["16:52", [
         {
           type: "image",
-          src: "pop_dog_20251217.jpg"
+          src: "images/pop_dog_20251217.jpg"
         }
       ]],
 
@@ -1201,7 +1201,7 @@ const recordsByDate = [
       ["14:46", [
         {
           type: "image",
-          src: "pop_mirror_20251220.png"
+          src: "images/pop_mirror_20251220.png"
         },
         "이렇게 마를 때도",
         "있었어",
@@ -1219,7 +1219,7 @@ const recordsByDate = [
       ["14:51", [
         {
           type: "image",
-          src: "pop_school_20251220.png"
+          src: "images/pop_school_20251220.png"
         },
         "어렸다"
       ]],
@@ -1389,7 +1389,7 @@ const recordsByDate = [
       ["19:52", [
         {
           type: "image",
-          src: "pop_dogs_20251219.jpg"
+          src: "images/pop_dogs_20251219.jpg"
         }
       ]]
 
@@ -3020,7 +3020,7 @@ function render() {
       const meta = el("div", "meta");
       const badge = el("span", "badge");
 
-      profile.src = "profile.jpg";
+      profile.src = "images/profile.jpg";
       profile.alt = "Delight";
 
       badge.innerHTML = badgeSVG;
