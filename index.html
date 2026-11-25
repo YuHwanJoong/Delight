@@ -9,6 +9,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css">
 
 <style>
+
+  @media (max-width: 480px) {
+  .header { height: 56px; }
+  .chat { padding: 12px 10px calc(24px + env(safe-area-inset-bottom)); }
+  .message { gap: 8px; margin-bottom: 16px; }
+  .profile { width: 34px; height: 34px; flex-basis: 34px; }
+  .meta { margin-bottom: 5px; }
+  .sender { font-size: 14px; }
+  .bubble, .reply { padding: 8px 12px; }
+  .bubble, .reply-answer { font-size: 14px; line-height: 1.45; }
+  .message-photo { max-width: min(100%, 240px); max-height: 300px; }
+}
+  
 * {
   box-sizing: border-box;
 }
