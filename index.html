@@ -8661,12 +8661,17 @@ const recordsByDate = [
 const translations = {};
 
 function T(original, en, ja, cn, tw) {
-  translations[original] = {
+  const value = {
     en,
     ja,
     "zh-CN": cn,
     "zh-TW": tw
   };
+
+  translations[original] = value;
+
+  // 줄바꿈을 제거한 문장도 자동으로 번역 등록
+  translations[original.replace(/\n/g, "")] = value;
 }
 
 
